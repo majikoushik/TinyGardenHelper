@@ -1,32 +1,9 @@
-Before implementing this milestone, first inspect the repository/project structure.
-
-read the following files carefully before making changes:
-
-* AGENTS.md
-* README.md
-* Docs/GAME_DESIGN.md
-* Docs/TECHNICAL_ARCHITECTURE.md
-* Docs/MOBILE_BUILD_CHECKLIST.md
-* Docs/CHILD_SAFETY_CHECKLIST.md
-* Any previously completed milestone notes or relevant scripts
-
-Then read `Docs/Prompts/10_mobile_build_release_candidate.md` completely and implement only the current milestone.
-
-
-Important rules:
-
-* For all required visual/audio assets in this milestone, first check whether the expected files already exist under Assets/_TinyGarden/. If they do not exist, create simple placeholder assets or placeholder prefabs with clear names. The placeholders should be good enough to test gameplay on Android/iOS, but they do not need to be final commercial artwork. Keep filenames stable so final art/audio can replace the placeholders later without breaking Unity references.
-* Do not jump to future milestones.
-* If required documentation files do not exist yet, create them as part of this milestone.
-* Preserve any existing architecture, naming conventions, child-safety rules, mobile-first UX rules, Android/iOS readiness requirements, and documentation decisions.
-* Do not add ads, analytics, login, cloud services, networking, or in-app purchases.
-* Keep the MVP small, polished, child-safe, and suitable for ages 3–7.
-
-After implementation:
-
-1. Update relevant documentation if the milestone changes architecture, scene flow, gameplay behavior, child-safety assumptions, build setup, or testing steps.
-2. Summarize all changed files.
-3. Explain what was implemented.
-4. Mention any manual Unity Editor actions required.
-5. Provide verification steps.
-6. Mention any risks or incomplete items before moving to the next milestone.
+https://kenney.nl/assets/background-elements
+https://www.kenney.nl/assets/animal-pack
+https://kenney.nl/assets/shape-characters
+https://kenney.nl/assets/ui-pack
+https://kenney.nl/assets/game-icons
+https://www.kenney.nl/assets/particle-pack
+https://www.kenney.nl/assets/ui-audio
+https://pixabay.com/music/search/children%20music%20loop/
+https://pixabay.com/sound-effects/
