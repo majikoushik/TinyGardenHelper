@@ -25,11 +25,13 @@ namespace TinyGarden.UI
             }
         }
 
+        public UnityEngine.Events.UnityEvent OnGateUnlocked;
+
         public void OnCorrectAnswerClicked()
         {
-            Debug.Log("Settings Unlocked (Placeholder)");
+            Debug.Log("[ParentalGate] Settings Unlocked");
             Hide();
-            // In the future, this will open the actual settings menu.
+            OnGateUnlocked?.Invoke();
         }
 
         public void OnIncorrectAnswerClicked()

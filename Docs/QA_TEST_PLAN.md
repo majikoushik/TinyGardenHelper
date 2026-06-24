@@ -45,7 +45,11 @@ This plan outlines the testing strategy for Tiny Garden Helper to ensure a child
   - Open the Sticker Book and verify the "Star" sticker is unlocked.
   - Restart Play Mode (or the game). Return to the Garden. Verify the animal and sticker are still present, but the Celebration Sequence does *not* play again (idempotent reward handling).
 
-## Audio Testing
+## 4. Settings and Accessibility
+- **Sensory Safe Mode**: Turn ON in Settings. Verify that scene transitions no longer fade to black (they just cut) and buttons no longer pop/scale when pressed.
+- **Audio Toggles**: Turn OFF Music, SFX, and Voice in settings. Verify all audio ceases immediately. Turn back on to verify audio resumes.
+- **Parental Gate**: Verify that the Settings panel can *only* be accessed by correctly answering the math question on the Parental Gate.
+- **Reset Progress**: Verify that tapping Reset Progress (now safely inside the Settings menu) instantly wipes the garden visuals, stickers, and animal unlock.
 - Verify that tapping UI elements plays a soft feedback sound (`ChildFriendlyButton` hooks).
 - Verify all settings toggles (Music, SFX, Voice) work independently.
 - Ensure audio state persists across app restarts.

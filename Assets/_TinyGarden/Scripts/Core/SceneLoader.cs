@@ -1,20 +1,19 @@
-using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections;
 
 namespace TinyGarden.Core
 {
     public class SceneLoader : MonoBehaviour
     {
         public static SceneLoader Instance { get; private set; }
-
+        
         [SerializeField] private float fadeDuration = 0.5f;
         
         private Canvas fadeCanvas;
         private Image fadeImage;
-        private bool isLoading = false;
+        private bool isTransitioning = false;
 
         private void Awake()
         {
@@ -22,7 +21,7 @@ namespace TinyGarden.Core
             {
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
-                CreateFadeUI();
+                CreateFadeCanvas();
             }
             else
             {
@@ -30,62 +29,89 @@ namespace TinyGarden.Core
             }
         }
 
-        private void CreateFadeUI()
+        private void CreateFadeCanvas()
         {
             GameObject canvasObj = new GameObject("FadeCanvas");
-            canvasObj.transform.SetParent(transform, false);
+            canvasObj.transform.SetParent(transform);
+            
             fadeCanvas = canvasObj.AddComponent<Canvas>();
             fadeCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            fadeCanvas.sortingOrder = 9999; // Ensure it renders on top
+            fadeCanvas.sortingOrder = 999; // Topmost
             
-            GameObject imageObj = new GameObject("FadeImage");
-            imageObj.transform.SetParent(canvasObj.transform, false);
-            fadeImage = imageObj.AddComponent<Image>();
+            GameObject imgObj = new GameObject("FadeImage");
+            imgObj.transform.SetParent(canvasObj.transform, false);
+            fadeImage = imgObj.AddComponent<Image>();
             fadeImage.color = new Color(0, 0, 0, 0); // Transparent black
             
             RectTransform rect = fadeImage.GetComponent<RectTransform>();
             rect.anchorMin = Vector2.zero;
             rect.anchorMax = Vector2.one;
             rect.sizeDelta = Vector2.zero;
+            
+            fadeImage.raycastTarget = false;
         }
 
         public void LoadScene(string sceneName)
         {
-            if (isLoading) return;
+            if (isTransitioning) return;
             StartCoroutine(LoadSceneRoutine(sceneName));
         }
 
         private IEnumerator LoadSceneRoutine(string sceneName)
         {
-            isLoading = true;
+            isTransitioning = true;
+            fadeImage.raycastTarget = true;
 
-            // Fade to black
-            float timer = 0f;
-            while (timer < fadeDuration)
+            bool sensorySafe = IsSensorySafeModeEnabled();
+
+            if (!sensorySafe)
             {
-                timer += Time.deltaTime;
-                float alpha = Mathf.Clamp01(timer / fadeDuration);
-                fadeImage.color = new Color(0, 0, 0, alpha);
+                // Fade out
+                float t = 0;
+                while (t < fadeDuration)
+                {
+                    t += Time.deltaTime;
+                    fadeImage.color = new Color(0, 0, 0, Mathf.Clamp01(t / fadeDuration));
+                    yield return null;
+                }
+            }
+            else
+            {
+                fadeImage.color = Color.black;
                 yield return null;
             }
-
-            fadeImage.color = new Color(0, 0, 0, 1);
 
             // Load scene
             yield return SceneManager.LoadSceneAsync(sceneName);
 
-            // Fade to clear
-            timer = 0f;
-            while (timer < fadeDuration)
+            if (!sensorySafe)
             {
-                timer += Time.deltaTime;
-                float alpha = 1f - Mathf.Clamp01(timer / fadeDuration);
-                fadeImage.color = new Color(0, 0, 0, alpha);
-                yield return null;
+                // Fade in
+                float t = fadeDuration;
+                while (t > 0)
+                {
+                    t -= Time.deltaTime;
+                    fadeImage.color = new Color(0, 0, 0, Mathf.Clamp01(t / fadeDuration));
+                    yield return null;
+                }
             }
 
             fadeImage.color = new Color(0, 0, 0, 0);
-            isLoading = false;
+            fadeImage.raycastTarget = false;
+            isTransitioning = false;
+        }
+
+        private bool IsSensorySafeModeEnabled()
+        {
+            if (GameManager.Instance != null && GameManager.Instance.SaveSystem != null)
+            {
+                var data = GameManager.Instance.SaveSystem.CurrentData;
+                if (data != null && data.Settings != null)
+                {
+                    return data.Settings.SensorySafeModeEnabled;
+                }
+            }
+            return false;
         }
     }
 }

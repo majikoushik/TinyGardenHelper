@@ -1,37 +1,34 @@
-# Audio Direction
-
-## Vision
-Audio in Tiny Garden Helper should be gentle, encouraging, and soothing. It provides crucial feedback for children who may not be able to read yet, while ensuring the experience never feels overwhelming, startling, or punitive.
+# Tiny Garden Helper - Audio Direction
 
 ## Core Principles
-- **Soft and Short**: Sound effects should be brief and use soft instruments (e.g., marimbas, bells, soft synths).
-- **Encouraging**: Voice lines and feedback sounds should always be positive. 
-- **No Startling Noises**: Avoid loud crashes, buzzers, or sudden loud volume spikes.
-- **Total Control**: All audio must be controllable (on/off) via the settings menu.
+1. **Gentle and Safe**: No harsh, loud, or sudden noises. Avoid high-pitched screeching or aggressive low-end booming.
+2. **Positive Reinforcement**: Sounds should make the child feel competent. "Correct" sounds should be warm and sparkly; "Incorrect" sounds should be neutral, like a soft wooden *thunk* or soft rubber *boop*.
+3. **Clear Voice Prompts**: Voiceover must be slow, extremely friendly, and highly articulated for preschool comprehension.
 
-## MVP Audio Hooks
+## Needed Assets List (Commercial Pass)
 
-### UI Sound Effects
-- **Button Tap**: A soft, pleasant click or pop.
-- **Menu Transition**: A gentle swoosh.
+### 1. Voiceover Prompts
+Required Cues:
+- `vo_intro`: "Let's help the garden!"
+- `vo_colormatch`: "Match the colors!"
+- `vo_counting`: "Put apples in the basket!"
+- `vo_shapesort`: "Find each shape's home!"
+- `vo_success`: "You helped the garden grow!"
+- `vo_animal_unlock`: "A new garden friend!"
+- `vo_try_again`: "Oops, try again!" (Optional, keep it very gentle)
 
-### Gameplay Sound Effects
-- **Activity Success**: A cheerful, bright chime or short melodic flourish.
-- **Activity Incorrect**: A very gentle, non-punitive "boop" or soft bounce sound. It must *not* sound like a buzzer or failure.
-- **Plant Growth**: Magical sparkles or a rising chime sequence.
-- **Animal Unlock**: A happy, soft celebratory sound or cute animal noise.
+### 2. Sound Effects (SFX)
+Required Cues:
+- `sfx_button_press`: Soft bubble pop or wood block tap.
+- `sfx_drag_pickup`: Gentle suction or slight rising tone.
+- `sfx_drag_drop_correct`: Warm marimba chime or soft bell.
+- `sfx_drag_drop_wrong`: Dull, soft 'thud' (never a harsh buzzer).
+- `sfx_plant_grow`: Magical ascending glitter sound.
+- `sfx_animal_bounce`: Cute squeak or boing.
+- `sfx_celebration`: A fuller chime/glissando for finishing all 3 games.
 
-### Voice Lines (Optional but Recommended)
-- "Try again!" (Gentle and encouraging)
-- "You did it!" / "Great job!"
-- "How many?" / "Match the color!" 
-
-### Music
-- **Garden Background Music**: A single looping track that is calm, cheerful, and ambient. It should sit quietly in the background and not demand attention.
-
-## Placeholder Audio Strategy
-Use short, simple synthesized tones or placeholder voice recordings to map out the audio logic before final assets are integrated.
-- `sfx_ui_tap`
-- `sfx_game_success`
-- `sfx_game_try_again`
-- `music_bg_garden`
+### 3. Music Tracks
+Required Cues:
+- `bgm_menu`: Acoustic, slow-tempo, happy guitar/ukulele or xylophone.
+- `bgm_garden`: Very calm, ambient nature-inspired track.
+- `bgm_minigame`: Slightly more active, but still deeply relaxing puzzle music.

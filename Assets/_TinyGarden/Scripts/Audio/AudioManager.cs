@@ -40,6 +40,7 @@ namespace TinyGarden.Audio
 
         public void PlaySfx(string cueId)
         {
+            if (!IsSfxEnabled()) return;
             AudioClip clip = GetClip(cueId);
             if (clip != null)
             {
@@ -49,6 +50,7 @@ namespace TinyGarden.Audio
 
         public void PlayVoice(string cueId)
         {
+            if (!IsVoiceEnabled()) return;
             AudioClip clip = GetClip(cueId);
             if (clip != null)
             {
@@ -61,6 +63,7 @@ namespace TinyGarden.Audio
 
         public void PlayMusic(string cueId)
         {
+            if (!IsMusicEnabled()) return;
             AudioClip clip = GetClip(cueId);
             if (clip != null)
             {
@@ -73,6 +76,36 @@ namespace TinyGarden.Audio
         public void StopMusic()
         {
             musicSource.Stop();
+        }
+
+        private bool IsMusicEnabled()
+        {
+            var sm = TinyGarden.Core.GameManager.Instance?.SaveSystem;
+            if (sm != null && sm.CurrentData != null && sm.CurrentData.Settings != null)
+            {
+                return sm.CurrentData.Settings.MusicEnabled;
+            }
+            return true;
+        }
+
+        private bool IsSfxEnabled()
+        {
+            var sm = TinyGarden.Core.GameManager.Instance?.SaveSystem;
+            if (sm != null && sm.CurrentData != null && sm.CurrentData.Settings != null)
+            {
+                return sm.CurrentData.Settings.SfxEnabled;
+            }
+            return true;
+        }
+
+        private bool IsVoiceEnabled()
+        {
+            var sm = TinyGarden.Core.GameManager.Instance?.SaveSystem;
+            if (sm != null && sm.CurrentData != null && sm.CurrentData.Settings != null)
+            {
+                return sm.CurrentData.Settings.VoiceEnabled;
+            }
+            return true;
         }
 
         private AudioClip GetClip(string cueId)

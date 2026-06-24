@@ -101,16 +101,36 @@ namespace TinyGarden.Editor
             Button settingsBtn = CreateButton(safeArea, "SettingsButton", "Settings", new Vector2(0, -300), new Vector2(0.5f, 0.5f), new Vector2(300, 100));
 
             // Parental Gate
-            GameObject gatePanel = CreatePanel(safeArea, "ParentalGatePanel", new Color(0, 0, 0, 0.8f));
+            GameObject gatePanel = CreatePanel(safeArea, "ParentalGatePanel", new Color(0, 0, 0, 0.9f));
             gatePanel.SetActive(false);
             Text qText = CreateText(gatePanel, "QuestionText", "For grown-ups: What is 12 x 11?", 50, Color.white, new Vector2(0, 100), new Vector2(0.5f, 0.5f));
             Button correctBtn = CreateButton(gatePanel, "Btn_132", "132", new Vector2(-150, -50), new Vector2(0.5f, 0.5f), new Vector2(150, 100));
             Button incorrectBtn = CreateButton(gatePanel, "Btn_121", "121", new Vector2(150, -50), new Vector2(0.5f, 0.5f), new Vector2(150, 100));
 
+            // Settings Panel
+            GameObject settingsPanel = CreatePanel(safeArea, "SettingsPanel", new Color(0.9f, 0.9f, 0.9f, 0.95f));
+            settingsPanel.SetActive(false);
+            CreateText(settingsPanel, "Title", "Settings", 60, Color.black, new Vector2(0, 500), new Vector2(0.5f, 0.5f));
+            
+            // Toggles (represented as Buttons for MVP simplicity)
+            Button musicBtn = CreateButton(settingsPanel, "MusicToggle", "Music: ON", new Vector2(0, 300), new Vector2(0.5f, 0.5f), new Vector2(400, 100));
+            Button sfxBtn = CreateButton(settingsPanel, "SFXToggle", "SFX: ON", new Vector2(0, 150), new Vector2(0.5f, 0.5f), new Vector2(400, 100));
+            Button voiceBtn = CreateButton(settingsPanel, "VoiceToggle", "Voice: ON", new Vector2(0, 0), new Vector2(0.5f, 0.5f), new Vector2(400, 100));
+            Button sensoryBtn = CreateButton(settingsPanel, "SensoryToggle", "Sensory Safe: OFF", new Vector2(0, -150), new Vector2(0.5f, 0.5f), new Vector2(400, 100));
+            
+            Button resetBtn = CreateButton(settingsPanel, "ResetButton", "Reset Progress", new Vector2(0, -350), new Vector2(0.5f, 0.5f), new Vector2(400, 100));
+            resetBtn.GetComponent<Image>().color = new Color(0.9f, 0.4f, 0.4f);
+            
+            Button closeSettingsBtn = CreateButton(settingsPanel, "CloseButton", "Close", new Vector2(0, -550), new Vector2(0.5f, 0.5f), new Vector2(300, 100));
+
+            // Privacy Info
+            CreateText(settingsPanel, "PrivacyText", "Privacy: Progress is saved locally. No ads, no analytics.", 30, Color.gray, new Vector2(0, -750), new Vector2(0.5f, 0.5f));
+
             // Managers
             GameObject uiManager = new GameObject("MainMenuManager");
             var menuController = uiManager.AddComponent<MainMenuController>();
             var gateController = uiManager.AddComponent<ParentalGate>();
+            var settingsController = uiManager.AddComponent<TinyGarden.UI.SettingsController>();
 
             // Wire up Parental Gate
             var gateField = typeof(ParentalGate).GetField("gatePanel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
@@ -122,11 +142,30 @@ namespace TinyGarden.Editor
             var menuGateField = typeof(MainMenuController).GetField("parentalGate", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             if (menuGateField != null) menuGateField.SetValue(menuController, gateController);
 
+            var settingsPanelField = typeof(TinyGarden.UI.SettingsController).GetField("settingsPanel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (settingsPanelField != null) settingsPanelField.SetValue(settingsController, settingsPanel);
+
             // Wire UnityEvents
             UnityEditor.Events.UnityEventTools.AddPersistentListener(playBtn.onClick, menuController.OnPlayClicked);
             UnityEditor.Events.UnityEventTools.AddPersistentListener(settingsBtn.onClick, menuController.OnSettingsClicked);
             UnityEditor.Events.UnityEventTools.AddPersistentListener(correctBtn.onClick, gateController.OnCorrectAnswerClicked);
             UnityEditor.Events.UnityEventTools.AddPersistentListener(incorrectBtn.onClick, gateController.OnIncorrectAnswerClicked);
+            
+            // Wire Gate to Settings
+            var gateEventField = typeof(ParentalGate).GetField("OnGateUnlocked", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            if (gateEventField != null)
+            {
+                var ev = (UnityEngine.Events.UnityEvent)gateEventField.GetValue(gateController);
+                if (ev == null)
+                {
+                    ev = new UnityEngine.Events.UnityEvent();
+                    gateEventField.SetValue(gateController, ev);
+                }
+                UnityEditor.Events.UnityEventTools.AddPersistentListener(ev, settingsController.OpenSettings);
+            }
+
+            UnityEditor.Events.UnityEventTools.AddPersistentListener(closeSettingsBtn.onClick, settingsController.CloseSettings);
+            UnityEditor.Events.UnityEventTools.AddPersistentListener(resetBtn.onClick, settingsController.OnResetProgressClicked);
 
             EditorSceneManager.SaveScene(scene, $"{SceneFolderPath}/{SceneNames.MainMenu}.unity");
         }
@@ -176,16 +215,11 @@ namespace TinyGarden.Editor
             // Home Button
             Button homeBtn = CreateButton(safeArea, "HomeButton", "Home", new Vector2(-400, 800), new Vector2(0.5f, 0f), new Vector2(150, 100));
             
-            // Reset Progress Button (Dev)
-            
             GameObject controllerObj = new GameObject("GardenManager");
             var controller = controllerObj.AddComponent<GardenSceneController>();
             
             var backBtn = CreateButton(safeArea, "BackButton", "Back to Menu", new Vector2(-250, 600), new Vector2(0.5f, 0.5f), new Vector2(200, 100));
             UnityEditor.Events.UnityEventTools.AddPersistentListener(backBtn.onClick, controller.OnHomeClicked);
-
-            var resetBtn = CreateButton(safeArea, "ResetButton", "Reset Progress", new Vector2(250, 600), new Vector2(0.5f, 0.5f), new Vector2(200, 100));
-            UnityEditor.Events.UnityEventTools.AddPersistentListener(resetBtn.onClick, controller.OnResetProgressClicked);
 
             // Create Benny Bunny (Animal Friend)
             GameObject bennyBunny = CreatePanel(safeArea, "BennyBunny", new Color(0.9f, 0.8f, 0.9f), new Vector2(200, 0), new Vector2(0.5f, 0.5f), new Vector2(120, 160));
@@ -346,6 +380,7 @@ namespace TinyGarden.Editor
             img.color = Color.white;
 
             Button btn = btnGO.AddComponent<Button>();
+            btnGO.AddComponent<ButtonAnimator>(); // Add micro-animation
 
             CreateText(btnGO, "Text", label, 40, Color.black, Vector2.zero, new Vector2(0.5f, 0.5f));
 

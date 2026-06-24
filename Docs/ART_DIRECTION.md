@@ -1,39 +1,30 @@
-# Art Direction
-
-## Vision
-The visual style of Tiny Garden Helper is a soft, cheerful, and approachable 2D cartoon style suitable for children aged 3-7. The garden should feel like a safe, magical place.
+# Tiny Garden Helper - Art Direction
 
 ## Core Principles
-- **Soft Cartoon Style**: Use rounded shapes and avoid sharp edges or aggressive angles.
-- **Friendly Elements**: All characters, plants, and UI elements should feel welcoming. Faces on animals should be gentle and happy.
-- **Color Palette**: Use bright, clear, but not overly saturated or harsh colors. Ensure clear contrast between foreground interactive elements and background scenery to help with visual hierarchy.
-- **Micro-Interactions**: Elements should respond gently to touch (e.g., slight scaling, soft bounce). 
-- **No Scary Elements**: Strictly avoid any scary characters, dark themes, danger motifs, or sudden flashing/aggressive visual effects.
+1. **Soft & Safe**: No sharp edges, no harsh contrast. Use rounded shapes and friendly forms.
+2. **Clear Readability**: Avoid visual clutter. Crucial interactive elements (like the mini-game spots or drag-and-drop targets) should stand out instantly.
+3. **Calming Palette**: Pastel and nature-inspired colors (soft greens, sky blues, warm yellows).
 
-## Asset Categories
+## Needed Assets List (Commercial Pass)
 
-### Garden Environment
-- Clean, flat-color sky and grass with simple rolling hills.
-- Background should not distract from the interactive plants.
+### 1. UI Elements
+- Large, rounded button backgrounds (Normal, Pressed, Disabled states).
+- Icons for Settings: Music, SFX, Voice, Accessibility.
+- Clean, thick-lined typography (or highly readable cartoon font).
 
-### Plants
-- Three distinct growth stages per plant (seed/sprout, growing, fully bloomed).
-- Magical glowing sparkles when growing.
+### 2. Garden Scene
+- **Background**: A grassy clearing with soft dirt patches.
+- **Color Flower**: 3 stages of growth (Seed/Dirt, Sprout, Blooming Flower).
+- **Fruit Tree**: 3 stages of growth (Sapling, Medium Tree, Full Apple Tree).
+- **Shape Bush**: 3 stages of growth (Small leaves, Medium bush, Trimmed Topiary).
 
-### Mini-Game Elements
-- **Fruits**: Simple, recognizable shapes (apple, berry, orange).
-- **Shapes**: Brightly colored circle, square, triangle.
-- **Colors**: Distinct primary and secondary colors (Red, Blue, Yellow, Green) for matching.
+### 3. Mini-Game Assets
+- **Color Match**: 3 colorful items (e.g., Red Butterfly, Blue Raindrop, Yellow Sunbeam) and 3 matching homes (Red Flower, Blue Puddle, Yellow Sunflower).
+- **Counting Fruits**: 1 Basket (empty/full states) and 5 juicy Red Apples.
+- **Shape Sort**: Circle, Square, and Triangle blocks. Matching silhouettes for the drop targets.
 
-### UI
-- Large, chunky buttons with rounded corners.
-- Clear icons instead of text where possible (e.g., gear for settings, play icon).
-
-## Placeholder Art Strategy
-Before final art is available, use simple colored vector shapes and text to represent elements. The game must remain fully playable using placeholders.
-- `ph_garden_bg`
-- `ph_plant_01_small`, `ph_plant_01_grown`
-- `ph_fruit_apple`
-- `ph_shape_circle`
-- `ph_reward_sparkle`
-- `ph_animal_friend`
+### 4. Rewards
+- **Benny Bunny**: An animated (or bounceable) cute bunny friend. Needs Idle, Bounce, and Happy states.
+- **Sticker Book**: A 2D overlay looking like a physical booklet.
+- **Stickers**: "Garden Helper Star", greyed out (locked) and full color (unlocked).
+- **Sparkles**: A bright particle effect or sprite sheet for the success celebration.

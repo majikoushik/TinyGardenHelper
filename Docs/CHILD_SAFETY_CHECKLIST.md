@@ -54,8 +54,13 @@
 - Sounds are soft and not startling.
 - Rewards are emotional and visual, not monetized.
 - No manipulative retention mechanics.
-- No randomized purchase-like reward economy.
-- No impossible states or failure loops.
+- [x] **No Harsh Punishment:** Incorrect answers use the "Try Again" fallback without buzzers or failure screens.
+- [x] **No Time Limits:** Children can take as long as they need without timers causing stress.
+- [x] **Sensory Safe Mode:** A toggle exists for neurodivergent children to disable sudden screen flashes, fades, and bouncy animations.
+
+### 4. Parental Controls & Privacy
+- [x] **Parental Gate:** Access to Settings and "Reset Progress" is strictly gated by an adult-oriented math question.
+- [x] **Data Privacy:** Explicitly stated in the Settings panel: no ads, no analytics, and all progress saves locally.
 
 ## MVP Acceptance Criteria
 
