@@ -18,6 +18,7 @@ namespace TinyGarden.Editor
         {
             BuildColorMatchScene();
             BuildCountingFruitsScene();
+            BuildShapeSortScene();
             UpdateBuildSettingsWithMiniGames();
             Debug.Log("Tiny Garden Mini-Games built successfully!");
         }
@@ -196,6 +197,90 @@ namespace TinyGarden.Editor
             EditorSceneManager.SaveScene(scene, $"{SceneFolderPath}/{SceneNames.CountingFruits}.unity");
         }
 
+        private static void BuildShapeSortScene()
+        {
+            var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            scene.name = SceneNames.ShapeSort;
+
+            // Camera
+            GameObject cameraGO = new GameObject("Main Camera");
+            Camera cam = cameraGO.AddComponent<Camera>();
+            cam.clearFlags = CameraClearFlags.SolidColor;
+            cam.backgroundColor = new Color(0.95f, 0.9f, 0.8f); // Warm paper/sand color
+            cam.orthographic = true;
+            cameraGO.tag = "MainCamera";
+
+            CreateEventSystem();
+            GameObject canvas = CreateCanvas("Canvas");
+
+            GameObject safeArea = new GameObject("SafeArea");
+            safeArea.transform.SetParent(canvas.transform, false);
+            RectTransform safeAreaRect = safeArea.AddComponent<RectTransform>();
+            safeAreaRect.anchorMin = Vector2.zero;
+            safeAreaRect.anchorMax = Vector2.one;
+            safeAreaRect.sizeDelta = Vector2.zero;
+            safeArea.AddComponent<TinyGarden.Platform.SafeAreaFitter>();
+
+            CreateText(safeArea, "TitleText", "Find each shape's home!", 50, Color.black, new Vector2(0, 700), new Vector2(0.5f, 0.5f));
+
+            // Targets (Homes)
+            float spacingX = 300f;
+            var targetCircle = CreateShapeTarget(safeArea, "Target_Circle", "Circle", Color.gray, new Vector2(-spacingX, 200));
+            var targetSquare = CreateShapeTarget(safeArea, "Target_Square", "Square", Color.gray, new Vector2(0, 200));
+            var targetTriangle = CreateShapeTarget(safeArea, "Target_Triangle", "Triangle", Color.gray, new Vector2(spacingX, 200));
+
+            // Draggables (Shapes)
+            var dragCircle = CreateShapeDraggable(safeArea, "Drag_Circle", "Circle", new Color(0.9f, 0.3f, 0.3f), new Vector2(spacingX, -300), TinyGarden.MiniGames.ShapeSort.ShapeType.Circle);
+            var dragSquare = CreateShapeDraggable(safeArea, "Drag_Square", "Square", new Color(0.3f, 0.3f, 0.9f), new Vector2(-spacingX, -300), TinyGarden.MiniGames.ShapeSort.ShapeType.Square);
+            var dragTriangle = CreateShapeDraggable(safeArea, "Drag_Triangle", "Triangle", new Color(0.3f, 0.9f, 0.3f), new Vector2(0, -300), TinyGarden.MiniGames.ShapeSort.ShapeType.Triangle);
+
+            // Celebration Panel
+            GameObject celebrationPanel = CreatePanel(safeArea, "CelebrationPanel", new Color(1f, 1f, 1f, 0.9f));
+            CreateText(celebrationPanel, "SuccessText", "Super Sorting!", 80, new Color(0.8f, 0.5f, 0.2f), new Vector2(0, 200), new Vector2(0.5f, 0.5f));
+            Button backBtn = CreateButton(celebrationPanel, "BackToGardenButton", "Back to Garden", new Vector2(0, -100), new Vector2(0.5f, 0.5f), new Vector2(300, 100));
+            celebrationPanel.SetActive(false);
+
+            // Game Controller
+            GameObject controllerObj = new GameObject("ShapeSortController");
+            var controller = controllerObj.AddComponent<TinyGarden.MiniGames.ShapeSort.ShapeSortController>();
+            
+            var def = ScriptableObject.CreateInstance<TinyGarden.MiniGames.ShapeSort.ShapeSortDefinition>();
+            var cFields = typeof(TinyGarden.MiniGames.ShapeSort.ShapeSortController).GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            foreach (var f in cFields)
+            {
+                if (f.Name == "definition") f.SetValue(controller, def);
+                if (f.Name == "celebrationPanel") f.SetValue(controller, celebrationPanel);
+            }
+
+            // Wire up draggables to controller
+            dragCircle.GetComponent<TinyGarden.MiniGames.ShapeSort.ShapeDraggableItem>().Setup(new TinyGarden.MiniGames.ShapeSort.ShapeItemData { shapeType = TinyGarden.MiniGames.ShapeSort.ShapeType.Circle }, controller);
+            dragSquare.GetComponent<TinyGarden.MiniGames.ShapeSort.ShapeDraggableItem>().Setup(new TinyGarden.MiniGames.ShapeSort.ShapeItemData { shapeType = TinyGarden.MiniGames.ShapeSort.ShapeType.Square }, controller);
+            dragTriangle.GetComponent<TinyGarden.MiniGames.ShapeSort.ShapeDraggableItem>().Setup(new TinyGarden.MiniGames.ShapeSort.ShapeItemData { shapeType = TinyGarden.MiniGames.ShapeSort.ShapeType.Triangle }, controller);
+
+            UnityEditor.Events.UnityEventTools.AddPersistentListener(backBtn.onClick, controller.ReturnToGarden);
+
+            EditorSceneManager.SaveScene(scene, $"{SceneFolderPath}/{SceneNames.ShapeSort}.unity");
+        }
+
+        private static GameObject CreateShapeTarget(GameObject parent, string name, string matchId, Color col, Vector2 pos)
+        {
+            GameObject go = CreatePanel(parent, name, new Color(col.r, col.g, col.b, 0.3f), pos, new Vector2(0.5f, 0.5f), new Vector2(200, 200));
+            var target = go.AddComponent<TinyGarden.MiniGames.ShapeSort.ShapeDropTarget>();
+            
+            var data = new TinyGarden.MiniGames.ShapeSort.ShapeItemData { shapeType = (TinyGarden.MiniGames.ShapeSort.ShapeType)System.Enum.Parse(typeof(TinyGarden.MiniGames.ShapeSort.ShapeType), matchId) };
+            target.Setup(data);
+            
+            return go;
+        }
+
+        private static GameObject CreateShapeDraggable(GameObject parent, string name, string matchId, Color col, Vector2 pos, TinyGarden.MiniGames.ShapeSort.ShapeType type)
+        {
+            GameObject go = CreatePanel(parent, name, col, pos, new Vector2(0.5f, 0.5f), new Vector2(150, 150));
+            go.AddComponent<CanvasGroup>();
+            var draggable = go.AddComponent<TinyGarden.MiniGames.ShapeSort.ShapeDraggableItem>();
+            return go;
+        }
+
         private static GameObject CreateDropTarget(GameObject parent, string name, string matchId, Color col, Vector2 pos)
         {
             GameObject go = CreatePanel(parent, name, new Color(col.r, col.g, col.b, 0.5f), pos, new Vector2(0.5f, 0.5f), new Vector2(150, 150));
@@ -232,7 +317,8 @@ namespace TinyGarden.Editor
             string[] newScenesPaths = new string[] 
             {
                 $"{SceneFolderPath}/{SceneNames.ColorMatch}.unity",
-                $"{SceneFolderPath}/{SceneNames.CountingFruits}.unity"
+                $"{SceneFolderPath}/{SceneNames.CountingFruits}.unity",
+                $"{SceneFolderPath}/{SceneNames.ShapeSort}.unity"
             };
 
             foreach (var path in newScenesPaths)

@@ -157,6 +157,9 @@ Purpose:
 - `FruitDraggableItem`: Unlockable draggable item that can be removed from a target.
 - `FruitBasketDropZone`: Container drop zone that tracks a dynamic list of items.
 - `CountVisualIndicator`: Displays large numbers and dot patterns for toddlers.
+- `ShapeSortController`: Manages shape sorting and coordinates progressive hints.
+- `ShapeDraggableItem`: Draggable item that tracks its own failures to trigger hints.
+- `ShapeDropTarget`: Receives shapes and can pulse as a hint.
 - `DragItemBase`: Reusable base class for touch-friendly drag-and-drop.
 - `DropTargetBase`: Reusable base class for validating dropped items.
 

@@ -31,6 +31,12 @@ This plan outlines the testing strategy for Tiny Garden Helper to ensure a child
   - Verify that you can drag an apple out of the basket to reduce the count (self-correction).
   - Verify that reaching the exact target count automatically advances the round after a short delay.
   - Verify that completing all 3 rounds opens the Celebration Panel and successfully saves progress.
+- **Shape Sort Mini-Game**:
+  - Verify that there are 3 distinct shapes and 3 distinct target homes.
+  - Drag a shape to the wrong home. Verify it snaps back smoothly (Attempt 1).
+  - Drag the *same* shape to the wrong home again. Verify it snaps back smoothly AND the correct home pulses gently to provide a hint (Attempt 2).
+  - Drag the shape to the correct home. Verify it snaps into place and plays a correct sound.
+  - Verify completing all 3 matches opens the Celebration Panel and successfully saves progress to disk.
 - **Incorrect Attempts**: Deliberately make wrong choices to verify that the "Try again" feedback is gentle, non-punitive, and allows infinite retries without blocking progress.
 - **Reward Sequence**: Verify that growing all three plants unlocks the animal friend and sticker.
 

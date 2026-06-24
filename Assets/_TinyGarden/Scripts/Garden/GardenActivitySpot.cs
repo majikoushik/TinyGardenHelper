@@ -43,6 +43,12 @@ namespace TinyGarden.Garden
                 SceneLoader.Instance.LoadScene(SceneNames.CountingFruits);
                 return;
             }
+            if (activityId == ActivityId.ShapeSort)
+            {
+                Debug.Log("[Garden] Loading Shape Sort mini-game...");
+                SceneLoader.Instance.LoadScene(SceneNames.ShapeSort);
+                return;
+            }
 
             Debug.Log($"[Garden] Simulating {activityId} activity completion for MVP testing.");
             

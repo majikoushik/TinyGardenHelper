@@ -7,5 +7,6 @@ namespace TinyGarden.Core
         public const string Garden = "Garden";
         public const string ColorMatch = "ColorMatch";
         public const string CountingFruits = "CountingFruits";
+        public const string ShapeSort = "ShapeSort";
     }
 }
