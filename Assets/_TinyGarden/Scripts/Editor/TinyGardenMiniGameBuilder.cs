@@ -17,6 +17,7 @@ namespace TinyGarden.Editor
         public static void BuildMiniGames()
         {
             BuildColorMatchScene();
+            BuildCountingFruitsScene();
             UpdateBuildSettingsWithMiniGames();
             Debug.Log("Tiny Garden Mini-Games built successfully!");
         }
@@ -83,6 +84,118 @@ namespace TinyGarden.Editor
             EditorSceneManager.SaveScene(scene, $"{SceneFolderPath}/{SceneNames.ColorMatch}.unity");
         }
 
+        private static void BuildCountingFruitsScene()
+        {
+            var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            scene.name = SceneNames.CountingFruits;
+
+            // Camera
+            GameObject cameraGO = new GameObject("Main Camera");
+            Camera cam = cameraGO.AddComponent<Camera>();
+            cam.clearFlags = CameraClearFlags.SolidColor;
+            cam.backgroundColor = new Color(0.7f, 0.9f, 0.7f); // Light green sky/orchard
+            cam.orthographic = true;
+            cameraGO.tag = "MainCamera";
+
+            CreateEventSystem();
+            GameObject canvas = CreateCanvas("Canvas");
+
+            GameObject safeArea = new GameObject("SafeArea");
+            safeArea.transform.SetParent(canvas.transform, false);
+            RectTransform safeAreaRect = safeArea.AddComponent<RectTransform>();
+            safeAreaRect.anchorMin = Vector2.zero;
+            safeAreaRect.anchorMax = Vector2.one;
+            safeAreaRect.sizeDelta = Vector2.zero;
+            safeArea.AddComponent<TinyGarden.Platform.SafeAreaFitter>();
+
+            CreateText(safeArea, "TitleText", "Put apples in the basket!", 50, Color.black, new Vector2(0, 700), new Vector2(0.5f, 0.5f));
+
+            // Visual Indicator
+            GameObject visualIndicator = new GameObject("VisualIndicator");
+            visualIndicator.transform.SetParent(safeArea.transform, false);
+            var indicatorRect = visualIndicator.AddComponent<RectTransform>();
+            indicatorRect.anchorMin = new Vector2(0.5f, 0.5f);
+            indicatorRect.anchorMax = new Vector2(0.5f, 0.5f);
+            indicatorRect.anchoredPosition = new Vector2(0, 500);
+
+            var numberText = CreateText(visualIndicator, "TargetNumber", "3", 120, Color.white, new Vector2(-150, 0), new Vector2(0.5f, 0.5f));
+            
+            GameObject dotsContainer = new GameObject("DotsContainer");
+            dotsContainer.transform.SetParent(visualIndicator.transform, false);
+            var dotsRect = dotsContainer.AddComponent<RectTransform>();
+            dotsRect.anchorMin = new Vector2(0.5f, 0.5f);
+            dotsRect.anchorMax = new Vector2(0.5f, 0.5f);
+            dotsRect.anchoredPosition = new Vector2(100, 0);
+            var hzLayout = dotsContainer.AddComponent<HorizontalLayoutGroup>();
+            hzLayout.childAlignment = TextAnchor.MiddleLeft;
+            hzLayout.spacing = 20;
+            hzLayout.childControlWidth = false;
+            hzLayout.childControlHeight = false;
+
+            GameObject dotPrefab = CreatePanel(null, "DotPrefab", Color.gray, Vector2.zero, Vector2.zero, new Vector2(50, 50));
+            // Will be used by script, hide it
+            dotPrefab.SetActive(false);
+
+            var viScript = visualIndicator.AddComponent<TinyGarden.MiniGames.CountingFruits.CountVisualIndicator>();
+            var viFields = typeof(TinyGarden.MiniGames.CountingFruits.CountVisualIndicator).GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            foreach (var f in viFields)
+            {
+                if (f.Name == "targetNumberText") f.SetValue(viScript, numberText);
+                if (f.Name == "dotsContainer") f.SetValue(viScript, dotsContainer.transform);
+                if (f.Name == "dotPrefab") f.SetValue(viScript, dotPrefab);
+                if (f.Name == "activeDotColor") f.SetValue(viScript, Color.green);
+                if (f.Name == "inactiveDotColor") f.SetValue(viScript, Color.gray);
+            }
+
+            // Basket (Drop Zone)
+            GameObject basket = CreatePanel(safeArea, "Basket", new Color(0.8f, 0.6f, 0.4f), new Vector2(0, -500), new Vector2(0.5f, 0.5f), new Vector2(400, 300));
+            var basketDrop = basket.AddComponent<TinyGarden.MiniGames.CountingFruits.FruitBasketDropZone>();
+            CreateText(basket, "BasketLabel", "Basket", 40, Color.white, Vector2.zero, new Vector2(0.5f, 0.5f));
+
+            // Apples (Draggables)
+            GameObject treeArea = new GameObject("TreeArea");
+            treeArea.transform.SetParent(safeArea.transform, false);
+            var treeRect = treeArea.AddComponent<RectTransform>();
+            treeRect.anchorMin = new Vector2(0.5f, 0.5f);
+            treeRect.anchorMax = new Vector2(0.5f, 0.5f);
+            treeRect.anchoredPosition = new Vector2(0, 100);
+
+            for (int i = 0; i < 5; i++)
+            {
+                float x = (i - 2) * 150f;
+                float y = (i % 2 == 0) ? 0 : 100f;
+                GameObject apple = CreatePanel(treeArea, $"Apple_{i}", Color.red, new Vector2(x, y), new Vector2(0.5f, 0.5f), new Vector2(100, 100));
+                apple.AddComponent<CanvasGroup>();
+                apple.AddComponent<TinyGarden.MiniGames.CountingFruits.FruitDraggableItem>();
+            }
+
+            // Celebration Panel
+            GameObject celebrationPanel = CreatePanel(safeArea, "CelebrationPanel", new Color(1f, 1f, 1f, 0.9f));
+            CreateText(celebrationPanel, "SuccessText", "Great Counting!", 80, new Color(0.2f, 0.8f, 0.2f), new Vector2(0, 200), new Vector2(0.5f, 0.5f));
+            Button backBtn = CreateButton(celebrationPanel, "BackToGardenButton", "Back to Garden", new Vector2(0, -100), new Vector2(0.5f, 0.5f), new Vector2(300, 100));
+
+            celebrationPanel.SetActive(false);
+
+            // Game Controller
+            GameObject controllerObj = new GameObject("CountingFruitsController");
+            var controller = controllerObj.AddComponent<TinyGarden.MiniGames.CountingFruits.CountingFruitsController>();
+            
+            var def = ScriptableObject.CreateInstance<TinyGarden.MiniGames.CountingFruits.CountingFruitsDefinition>();
+            
+            var cFields = typeof(TinyGarden.MiniGames.CountingFruits.CountingFruitsController).GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            foreach (var f in cFields)
+            {
+                if (f.Name == "definition") f.SetValue(controller, def);
+                if (f.Name == "visualIndicator") f.SetValue(controller, viScript);
+                if (f.Name == "basket") f.SetValue(controller, basketDrop);
+                if (f.Name == "celebrationPanel") f.SetValue(controller, celebrationPanel);
+            }
+
+            UnityEditor.Events.UnityEventTools.AddPersistentListener(backBtn.onClick, controller.ReturnToGarden);
+
+            EditorSceneManager.SaveScene(scene, $"{SceneFolderPath}/{SceneNames.CountingFruits}.unity");
+        }
+
         private static GameObject CreateDropTarget(GameObject parent, string name, string matchId, Color col, Vector2 pos)
         {
             GameObject go = CreatePanel(parent, name, new Color(col.r, col.g, col.b, 0.5f), pos, new Vector2(0.5f, 0.5f), new Vector2(150, 150));
@@ -113,22 +226,30 @@ namespace TinyGarden.Editor
         private static void UpdateBuildSettingsWithMiniGames()
         {
             var originalScenes = EditorBuildSettings.scenes;
-            bool foundColorMatch = false;
+            var newScenesList = new System.Collections.Generic.List<EditorBuildSettingsScene>();
+            newScenesList.AddRange(originalScenes);
 
-            string cmPath = $"{SceneFolderPath}/{SceneNames.ColorMatch}.unity";
-
-            foreach (var s in originalScenes)
+            string[] newScenesPaths = new string[] 
             {
-                if (s.path == cmPath) foundColorMatch = true;
+                $"{SceneFolderPath}/{SceneNames.ColorMatch}.unity",
+                $"{SceneFolderPath}/{SceneNames.CountingFruits}.unity"
+            };
+
+            foreach (var path in newScenesPaths)
+            {
+                bool found = false;
+                foreach (var s in originalScenes)
+                {
+                    if (s.path == path) found = true;
+                }
+
+                if (!found)
+                {
+                    newScenesList.Add(new EditorBuildSettingsScene(path, true));
+                }
             }
 
-            if (!foundColorMatch)
-            {
-                var newScenes = new EditorBuildSettingsScene[originalScenes.Length + 1];
-                System.Array.Copy(originalScenes, newScenes, originalScenes.Length);
-                newScenes[originalScenes.Length] = new EditorBuildSettingsScene(cmPath, true);
-                EditorBuildSettings.scenes = newScenes;
-            }
+            EditorBuildSettings.scenes = newScenesList.ToArray();
         }
 
         // --- Helper methods duplicated from TinyGardenSceneBuilder for simplicity ---

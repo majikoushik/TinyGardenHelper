@@ -10,7 +10,7 @@ read the following files carefully before making changes:
 * Docs/CHILD_SAFETY_CHECKLIST.md
 * Any previously completed milestone notes or relevant scripts
 
-Then read `Docs/Prompts/05_color_match_minigame.md` completely and implement only the current milestone.
+Then read `Docs/Prompts/06_counting_fruits_minigame.md` completely and implement only the current milestone.
 
 
 Important rules:

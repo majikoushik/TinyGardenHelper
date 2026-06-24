@@ -10,10 +10,12 @@ namespace TinyGarden.MiniGames.Shared
         public string MatchId;
         public bool IsMatched { get; private set; }
 
-        private CanvasGroup canvasGroup;
-        private RectTransform rectTransform;
-        private Canvas canvas;
-        private Vector2 originalPosition;
+        public bool IsLocked { get; protected set; }
+
+        protected CanvasGroup canvasGroup;
+        protected RectTransform rectTransform;
+        protected Canvas canvas;
+        protected Vector2 homePosition;
 
         public event Action<DragItemBase> OnDragStarted;
         public event Action<DragItemBase> OnDragEnded;
@@ -25,11 +27,15 @@ namespace TinyGarden.MiniGames.Shared
             canvas = GetComponentInParent<Canvas>();
         }
 
+        protected virtual void Start()
+        {
+            homePosition = rectTransform.anchoredPosition;
+        }
+
         public virtual void OnBeginDrag(PointerEventData eventData)
         {
-            if (IsMatched) return;
+            if (IsLocked) return;
 
-            originalPosition = rectTransform.anchoredPosition;
             canvasGroup.blocksRaycasts = false;
             canvasGroup.alpha = 0.8f;
 
@@ -38,13 +44,13 @@ namespace TinyGarden.MiniGames.Shared
 
         public virtual void OnDrag(PointerEventData eventData)
         {
-            if (IsMatched || canvas == null) return;
+            if (IsLocked || canvas == null) return;
             rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
         }
 
         public virtual void OnEndDrag(PointerEventData eventData)
         {
-            if (IsMatched) return;
+            if (IsLocked) return;
 
             canvasGroup.blocksRaycasts = true;
             canvasGroup.alpha = 1f;
@@ -54,17 +60,29 @@ namespace TinyGarden.MiniGames.Shared
 
         public virtual void ReturnToStart()
         {
-            if (IsMatched) return;
-            rectTransform.anchoredPosition = originalPosition;
+            if (IsLocked) return;
+            rectTransform.anchoredPosition = homePosition;
             HandleIncorrectFeedback();
         }
 
-        public virtual void SetMatched(Vector3 dropPosition)
+        public virtual void SetMatched(Vector3 dropPosition, bool lockItem = true)
         {
             IsMatched = true;
+            IsLocked = lockItem;
             rectTransform.position = dropPosition;
-            canvasGroup.blocksRaycasts = false; // Disable dragging once matched
+            
+            if (lockItem)
+            {
+                canvasGroup.blocksRaycasts = false; // Disable dragging once matched
+            }
+            
             HandleCorrectFeedback();
+        }
+
+        public virtual void Unmatch()
+        {
+            IsMatched = false;
+            IsLocked = false;
         }
 
         protected abstract void HandleCorrectFeedback();

@@ -153,9 +153,12 @@ Purpose:
 - `ColorMatchController`: Color matching activity logic.
 - `ColorDraggableItem`: Draggable object for color match (butterfly/water drop).
 - `ColorDropTarget`: Drop target for color match (flower/pot).
+- `CountingFruitsController`: Controls multi-round counting logic.
+- `FruitDraggableItem`: Unlockable draggable item that can be removed from a target.
+- `FruitBasketDropZone`: Container drop zone that tracks a dynamic list of items.
+- `CountVisualIndicator`: Displays large numbers and dot patterns for toddlers.
 - `DragItemBase`: Reusable base class for touch-friendly drag-and-drop.
 - `DropTargetBase`: Reusable base class for validating dropped items.
-- `ColorMatchDefinition` & `ColorMatchItemData`: Configuration models.
 
 ### Rewards
 

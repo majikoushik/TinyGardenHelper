@@ -25,6 +25,12 @@ This plan outlines the testing strategy for Tiny Garden Helper to ensure a child
   - Verify dragging the wrong color returns the butterfly gently to its starting position and triggers a pulse hint on the drop target.
   - Verify dragging the correct color snaps it to the target and plays a success sparkle sound.
   - Verify completing all three matches opens the Celebration Panel and successfully saves progress.
+- **Counting Fruits Mini-Game**:
+  - Drag apples into the basket. Verify the basket tracks the correct number and the dots illuminate properly.
+  - Verify that if you put too many apples in the basket, it pulses as a hint but does not fail the game.
+  - Verify that you can drag an apple out of the basket to reduce the count (self-correction).
+  - Verify that reaching the exact target count automatically advances the round after a short delay.
+  - Verify that completing all 3 rounds opens the Celebration Panel and successfully saves progress.
 - **Incorrect Attempts**: Deliberately make wrong choices to verify that the "Try again" feedback is gentle, non-punitive, and allows infinite retries without blocking progress.
 - **Reward Sequence**: Verify that growing all three plants unlocks the animal friend and sticker.
 
