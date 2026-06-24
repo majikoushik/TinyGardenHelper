@@ -1,63 +1,44 @@
 # Tiny Garden Helper
 
-Tiny Garden Helper is a planned Unity 2D educational mobile game for Android and iOS. The MVP is a portrait-mode, offline-first garden game for children ages 3-7, focused on three simple activities:
+## Game Concept
+Tiny Garden Helper is a gentle, colorful, and offline-first educational Unity 2D mobile game. Children help a magical garden grow by completing simple, calm mini-games. Completing all activities unlocks a cute animal friend. 
 
-- Color matching
-- Counting fruits from 1 to 5
-- Shape sorting with circle, square, and triangle
-
-Children help three magical garden plants grow by completing one activity per plant. When all three plants grow, they unlock a cute animal friend. The experience should be gentle, cheerful, and age-appropriate: no ads, no in-app purchases, no account system, no chat, no timers, no punishment screens, and no child-accessible external links.
-
-## Current Repository Status
-
-This repository is currently at startup-planning stage. No Unity project files have been generated yet. The next implementation step is to create a Unity 2D project in this repository and add the folder structure, scenes, prefabs, ScriptableObject definitions, and placeholder assets described in the docs.
-
-## Documentation
-
-- [Game Design](Docs/GAME_DESIGN.md)
-- [Technical Architecture](Docs/TECHNICAL_ARCHITECTURE.md)
-- [Mobile Build Checklist](Docs/MOBILE_BUILD_CHECKLIST.md)
-- [Child Safety Checklist](Docs/CHILD_SAFETY_CHECKLIST.md)
-- [Agent Notes](AGENTS.md)
+## Target Audience
+- **Age:** 3-7 years (kindergarten focused).
+- **Interaction:** Touch-first, minimal reading required, gentle feedback loops, no pressure or timers.
 
 ## MVP Scope
+- **Scenes:** Boot, Splash, Main Menu, Garden (hub), Settings.
+- **Mini-Games:**
+  1. Color Match
+  2. Counting Fruits (1-5)
+  3. Shape Sort
+- **Rewards:** Plant growth, sparkles, sticker/animal friend unlock.
 
-The MVP should include:
+## Current Project Status
+The repository has been structured with the fundamental Unity project folders and required documentation under `Docs/`. The next step is to create the Unity project itself and set up the Boot, Main Menu, and Garden scenes.
 
-- Splash flow
-- Main menu
-- Garden scene with three plants
-- Three activity panels or scenes
-- Plant growth reward feedback
-- Final animal friend unlock
-- Settings with audio toggles and protected parent area
-- Local progress saving
-- Placeholder art and audio hooks that can be replaced later
+## Opening the Project
+1. Open **Unity Hub**.
+2. Select **Add project from disk** and choose the `TinyGardenHelper` folder.
+3. Recommended Unity version: **Unity 2022.3 LTS** (or newer LTS).
+4. Use the **2D Core** project template if creating from scratch.
 
-The MVP should not include analytics, ads, networking, cloud saves, purchases, leaderboards, accounts, user-generated content, or social features.
+## Running the Scenes
+1. Open `Assets/_TinyGarden/Scenes/Boot.unity`.
+2. Press **Play** in the Unity Editor to flow through to the Main Menu and Garden scenes.
 
-## Target Platforms
+## Local Testing
+- Ensure the Unity Editor is set to a portrait mobile resolution (e.g., 1080x1920).
+- Test touch interactions using the Device Simulator if available, or mouse clicks.
 
-- Android phones and tablets
-- iPhone and iPad
-- Portrait orientation only
-- Offline-first
-- Lightweight 2D rendering suitable for mid-range devices
+## Android / iOS Build Notes
+- **Android:** Target ARM64. Ensure offline capability and handle the back button safely. Output as AAB for store or APK for local testing.
+- **iOS:** Ensure Safe Area components are used to handle notches. iOS builds generate an Xcode project requiring a Mac to compile.
 
-## Recommended Unity Baseline
-
-- Unity 2022.3 LTS or newer LTS
-- 2D Core project template
-- C# scripts
-- Built-in Unity UI or UI Toolkit only if the project standardizes on it early
-- No third-party SDKs for MVP unless a specific need is approved
-
-## Next Implementation Steps
-
-1. Create the Unity 2D project in this repository.
-2. Add the folder structure from `Docs/TECHNICAL_ARCHITECTURE.md`.
-3. Create placeholder sprites and simple UI prefabs.
-4. Implement boot, scene loading, save, audio, reward, and activity orchestration systems.
-5. Build the garden loop with three plants and local progress.
-6. Add the three mini activities one at a time.
-7. Test on multiple screen sizes before replacing placeholders with final art.
+## Child Safety Policy Summary
+- **No Ads or IAP** in the MVP.
+- **No Analytics, Tracking, or Data Collection.**
+- **No External Links** accessible to the child.
+- **Parental Gate** required to access the Settings/Reset progress screen.
+- **Completely Offline:** The game works 100% without an internet connection.

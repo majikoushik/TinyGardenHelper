@@ -14,6 +14,7 @@ Then read `Docs/Prompts/01_project_structure_and_docs.md` completely and impleme
 
 Important rules:
 
+* For all required visual/audio assets in this milestone, first check whether the expected files already exist under Assets/_TinyGarden/. If they do not exist, create simple placeholder assets or placeholder prefabs with clear names. The placeholders should be good enough to test gameplay on Android/iOS, but they do not need to be final commercial artwork. Keep filenames stable so final art/audio can replace the placeholders later without breaking Unity references.
 * Do not jump to future milestones.
 * If required documentation files do not exist yet, create them as part of this milestone.
 * Preserve any existing architecture, naming conventions, child-safety rules, mobile-first UX rules, Android/iOS readiness requirements, and documentation decisions.

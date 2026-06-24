@@ -140,3 +140,15 @@ Audio should be soft, short, and non-startling. All audio must be controllable i
 - External links available to children
 - Procedural curriculum generation
 - Large reward economy
+
+## Commercial Delight Ideas
+
+These ideas enhance the MVP to feel premium without expanding scope too much:
+
+- Garden reacts softly to progress: butterflies, clouds, sunshine rays, birds.
+- "Kindness feedback": even incorrect attempts animate gently and guide the child.
+- Sticker book unlock after completing all three games.
+- Animal friend does a short celebration animation.
+- Parent-facing "Learning Goals" screen behind parental gate.
+- Voice prompt placeholders for non-reading children.
+- Sensory-safe mode: reduce animation intensity and sound volume.
