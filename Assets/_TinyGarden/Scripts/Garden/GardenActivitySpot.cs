@@ -1,24 +1,57 @@
 using UnityEngine;
+using UnityEngine.UI;
+using TinyGarden.MiniGames.Shared;
+using TinyGarden.Core;
 
 namespace TinyGarden.Garden
 {
     public class GardenActivitySpot : MonoBehaviour
     {
-        [SerializeField] private string activityName = "Activity";
+        public ActivityId activityId = ActivityId.None;
+        [SerializeField] private Image spotImage;
         
+        private bool isCompleted = false;
+
+        public void UpdateVisualState(bool completed)
+        {
+            isCompleted = completed;
+            if (spotImage != null)
+            {
+                // Placeholder visual growth: Turn bright green if completed
+                spotImage.color = completed ? Color.green : Color.white;
+            }
+        }
+
         public void OnSpotTapped()
         {
-            // Placeholder interaction feedback
-            Debug.Log($"Coming next: {activityName}!");
+            if (isCompleted)
+            {
+                Debug.Log($"[Garden] {activityId} is already completed. Plant is happy!");
+                StartCoroutine(PulseRoutine());
+                return;
+            }
+
+            Debug.Log($"[Garden] Simulating {activityId} activity completion for MVP testing.");
             
-            // Simple visual feedback: scale pulse
+            // SIMULATING MVP COMPLETION:
+            // TODO (Prompt 05): Replace this simulated completion with actual Color Match gameplay transition.
+            if (GameManager.Instance != null && GameManager.Instance.SaveSystem != null)
+            {
+                GameManager.Instance.SaveSystem.MarkActivityCompleted(activityId);
+            }
+            
+            // Update visual immediately and pulse
+            UpdateVisualState(true);
             StartCoroutine(PulseRoutine());
+            
+            // Notify controller to check for Animal Unlock
+            FindObjectOfType<GardenSceneController>()?.CheckProgressState();
         }
 
         private System.Collections.IEnumerator PulseRoutine()
         {
             Vector3 originalScale = transform.localScale;
-            transform.localScale = originalScale * 1.1f;
+            transform.localScale = originalScale * 1.2f;
             yield return new WaitForSeconds(0.15f);
             transform.localScale = originalScale;
         }

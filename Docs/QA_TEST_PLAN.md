@@ -33,6 +33,8 @@ This plan outlines the testing strategy for Tiny Garden Helper to ensure a child
 ## Save Data & Persistence
 - Complete partial progress (e.g., 1 out of 3 plants grown) and close the app. Reopen to ensure progress is maintained.
 - Test the Parent-Gated Reset: verify the gate works, and that confirming the reset completely clears progress and audio settings.
+- Verify `save.json` fallback logic by deliberately corrupting the JSON file in `persistentDataPath`. The app should rename the corrupted file to `save.json.bak` and generate a fresh save without crashing.
+- Run `SaveSystemTests` EditMode tests via the Unity Test Runner to verify serialization and logic.
 
 ## Offline & Safety Checks
 - Run the app in Airplane mode to ensure 100% functionality.

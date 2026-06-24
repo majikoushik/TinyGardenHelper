@@ -10,8 +10,8 @@ read the following files carefully before making changes:
 * Docs/CHILD_SAFETY_CHECKLIST.md
 * Any previously completed milestone notes or relevant scripts
 
-Then read `Docs/Prompts/03_core_managers_shared_systems.md` completely and implement only the current milestone.
-Prompt 02 already introduced SimpleSceneLoader as a lightweight static wrapper. In Prompt 03, if a more complete SceneLoader or transition manager is required, extend or replace SimpleSceneLoader cleanly. Do not create duplicate competing scene-loading systems.
+Then read `Docs/Prompts/05_color_match_minigame.md` completely and implement only the current milestone.
+
 
 Important rules:
 

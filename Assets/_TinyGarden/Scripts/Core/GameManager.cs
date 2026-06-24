@@ -9,6 +9,8 @@ namespace TinyGarden.Core
 
         public event Action OnSessionStarted;
         
+        public TinyGarden.SaveSystem.SaveSystemService SaveSystem { get; private set; }
+        
         // Placeholder for future session state
         public bool IsSessionActive { get; private set; }
 
@@ -18,6 +20,13 @@ namespace TinyGarden.Core
             {
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
+                
+                SaveSystem = GetComponent<TinyGarden.SaveSystem.SaveSystemService>();
+                if (SaveSystem != null)
+                {
+                    SaveSystem.Initialize();
+                }
+                
                 InitializeSession();
             }
             else

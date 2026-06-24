@@ -128,9 +128,9 @@ Purpose:
 
 ### Saving
 
-- `SaveSystem`: Saves and loads local progress.
-- `SaveData`: Serializable saved progress model.
-- `SaveKeys`: Constants for save keys and current save version.
+- `ISaveSystem` & `LocalJsonSaveSystem`: Core JSON serialization logic.
+- `SaveSystemService`: MonoBehaviour wrapper for GameManager integration.
+- `GameSaveData`, `ActivityProgressData`, `SettingsData`: Strongly typed serialization models.
 
 ### Audio
 

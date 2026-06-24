@@ -62,6 +62,7 @@ namespace TinyGarden.Editor
             persistentManagers.AddComponent<TinyGarden.Audio.AudioManager>();
             persistentManagers.AddComponent<UIManager>();
             persistentManagers.AddComponent<TinyGarden.Rewards.RewardSystem>();
+            persistentManagers.AddComponent<TinyGarden.SaveSystem.SaveSystemService>();
             persistentManagers.AddComponent<TinyGarden.Platform.SafeAreaService>();
 
             // Boot Controller
@@ -160,9 +161,9 @@ namespace TinyGarden.Editor
             var act2 = spot2.gameObject.AddComponent<GardenActivitySpot>();
             var act3 = spot3.gameObject.AddComponent<GardenActivitySpot>();
 
-            SetActivityName(act1, "Color Match");
-            SetActivityName(act2, "Counting Fruits");
-            SetActivityName(act3, "Shape Sort");
+            SetActivityId(act1, TinyGarden.MiniGames.Shared.ActivityId.ColorMatch);
+            SetActivityId(act2, TinyGarden.MiniGames.Shared.ActivityId.CountingFruits);
+            SetActivityId(act3, TinyGarden.MiniGames.Shared.ActivityId.ShapeSort);
 
             UnityEditor.Events.UnityEventTools.AddPersistentListener(spot1.onClick, act1.OnSpotTapped);
             UnityEditor.Events.UnityEventTools.AddPersistentListener(spot2.onClick, act2.OnSpotTapped);
@@ -170,23 +171,40 @@ namespace TinyGarden.Editor
 
             // Animal Spot Placeholder
             CreatePanel(safeArea, "AnimalPlaceholder", new Color(0.9f, 0.9f, 0.9f, 0.5f), new Vector2(0, -300), new Vector2(0.5f, 0.5f), new Vector2(300, 200));
-            CreateText(safeArea, "AnimalText", "Animal Friend\n(Locked)", 30, Color.black, new Vector2(0, -300), new Vector2(0.5f, 0.5f));
+            Text animalTxt = CreateText(safeArea, "AnimalText", "Animal Friend\n(Locked)", 30, Color.black, new Vector2(0, -300), new Vector2(0.5f, 0.5f));
 
             // Home Button
             Button homeBtn = CreateButton(safeArea, "HomeButton", "Home", new Vector2(-400, 800), new Vector2(0.5f, 0f), new Vector2(150, 100));
             
+            // Reset Progress Button (Dev)
+            Button resetBtn = CreateButton(safeArea, "ResetButton", "[QA] Reset Progress", new Vector2(400, 800), new Vector2(0.5f, 0f), new Vector2(250, 100));
+            
             GameObject uiManager = new GameObject("GardenManager");
             var gardenController = uiManager.AddComponent<GardenSceneController>();
+            
+            var textObjField = typeof(GardenSceneController).GetField("animalStatusText", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (textObjField != null) textObjField.SetValue(gardenController, animalTxt);
+
             UnityEditor.Events.UnityEventTools.AddPersistentListener(homeBtn.onClick, gardenController.OnHomeClicked);
+            UnityEditor.Events.UnityEventTools.AddPersistentListener(resetBtn.onClick, gardenController.OnResetProgressClicked);
 
             EditorSceneManager.SaveScene(scene, $"{SceneFolderPath}/{SceneNames.Garden}.unity");
         }
 
-        private static void SetActivityName(GardenActivitySpot spot, string name)
+        private static void SetActivityId(GardenActivitySpot spot, TinyGarden.MiniGames.Shared.ActivityId id)
         {
-            var field = typeof(GardenActivitySpot).GetField("activityName", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (field != null) field.SetValue(spot, name);
-        }
+            var field = typeof(GardenActivitySpot).GetField("activityId", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            if (field != null)
+            {
+                field.SetValue(spot, id);
+            }
+            
+            var imageField = typeof(GardenActivitySpot).GetField("spotImage", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (imageField != null)
+            {
+                imageField.SetValue(spot, spot.GetComponent<Image>());
+            }
+        } 
 
         private static GameObject CreateCanvas(string name)
         {
