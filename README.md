@@ -16,7 +16,7 @@ Tiny Garden Helper is a gentle, colorful, and offline-first educational Unity 2D
 - **Rewards:** Plant growth, sparkles, sticker/animal friend unlock.
 
 ## Current Project Status
-The repository has been structured with the fundamental Unity project folders and required documentation under `Docs/`. The next step is to create the Unity project itself and set up the Boot, Main Menu, and Garden scenes.
+The repository has been initialized with the foundational architecture. The Boot, Main Menu, and Garden scene shells, along with their core UI scripts, have been created. The next step is to implement the local save system and progress tracking.
 
 ## Opening the Project
 1. Open **Unity Hub**.
@@ -24,9 +24,11 @@ The repository has been structured with the fundamental Unity project folders an
 3. Recommended Unity version: **Unity 2022.3 LTS** (or newer LTS).
 4. Use the **2D Core** project template if creating from scratch.
 
-## Running the Scenes
-1. Open `Assets/_TinyGarden/Scenes/Boot.unity`.
-2. Press **Play** in the Unity Editor to flow through to the Main Menu and Garden scenes.
+## Generating and Running the Scenes
+1. Open the project in the Unity Editor.
+2. From the top menu, click **Tiny Garden > Build Initial Scenes**. This will safely generate the Canvas, UI, and Scene structures.
+3. Open `Assets/_TinyGarden/Scenes/Boot.unity`.
+4. Press **Play** in the Unity Editor to flow through to the Main Menu and Garden scenes.
 
 ## Local Testing
 - Ensure the Unity Editor is set to a portrait mobile resolution (e.g., 1080x1920).

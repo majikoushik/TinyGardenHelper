@@ -116,7 +116,7 @@ Purpose:
 ## Core C# Scripts And Classes
 
 ### Bootstrap
-
+- `BootController`: Handles initial splash delay and transitions to Main Menu.
 - `GameManager`: Owns high-level game state and service references.
 - `AppConfig`: ScriptableObject for app-wide settings.
 - `GameState`: Runtime state model for current session.
@@ -173,7 +173,7 @@ Purpose:
 - `LargeButtonFeedback`: Button scale/sound feedback.
 
 ### Utilities
-
+- `TinyGardenSceneBuilder`: Unity Editor script to safely auto-generate scenes and UI canvases.
 - `SerializableGuid` or string IDs for stable data references.
 - `ScreenUtility`: Orientation and device helpers if needed.
 - `TweenLite`: Tiny local animation helper only if Unity animation clips are insufficient.

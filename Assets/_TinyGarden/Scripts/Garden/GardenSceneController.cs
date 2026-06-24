@@ -1,0 +1,13 @@
+using UnityEngine;
+using TinyGarden.Core;
+
+namespace TinyGarden.Garden
+{
+    public class GardenSceneController : MonoBehaviour
+    {
+        public void OnHomeClicked()
+        {
+            SimpleSceneLoader.LoadScene(SceneNames.MainMenu);
+        }
+    }
+}

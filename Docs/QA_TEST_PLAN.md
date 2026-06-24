@@ -8,6 +8,12 @@ This plan outlines the testing strategy for Tiny Garden Helper to ensure a child
 - **iOS**: Test on iPhone (notched) and iPad. Verify safe area padding and audio interruption behavior.
 - **Orientation**: App must remain locked in portrait mode.
 
+## Scene Flow Testing
+- **Boot to Main Menu**: Start from the Boot scene, verify the splash screen displays briefly, then automatically loads the Main Menu.
+- **Main Menu**: Verify the "Play" button loads the Garden scene. Verify the "Settings" button opens the Parental Gate placeholder.
+- **Parental Gate**: Verify that clicking the incorrect answer closes the gate, and the correct answer logs a success message.
+- **Garden**: Verify the "Home" button returns to the Main Menu. Verify tapping the three activity spots outputs a "Coming next" debug log.
+
 ## Core Interaction Testing
 - **Touch Responsiveness**: Ensure all buttons and interactive elements have large hit areas.
 - **Drag and Drop**: For shape sorting, verify shapes follow the finger smoothly and snap correctly without getting stuck.

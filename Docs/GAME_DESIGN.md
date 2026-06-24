@@ -95,7 +95,7 @@ Avoid:
 
 ## Scenes And Flow
 
-1. Splash
+1. Boot (Splash)
 2. Main Menu
 3. Garden
 4. Activity UI for color, counting, and shape sorting
