@@ -1,0 +1,30 @@
+Before implementing this milestone, first inspect the repository/project structure.
+
+read the following files carefully before making changes:
+
+* AGENTS.md
+* README.md
+* Docs/GAME_DESIGN.md
+* Docs/TECHNICAL_ARCHITECTURE.md
+* Docs/MOBILE_BUILD_CHECKLIST.md
+* Docs/CHILD_SAFETY_CHECKLIST.md
+* Any previously completed milestone notes or relevant scripts
+
+Then read `Docs/Prompts/01_project_structure_and_docs.md` completely and implement only the current milestone.
+
+Important rules:
+
+* Do not jump to future milestones.
+* If required documentation files do not exist yet, create them as part of this milestone.
+* Preserve any existing architecture, naming conventions, child-safety rules, mobile-first UX rules, Android/iOS readiness requirements, and documentation decisions.
+* Do not add ads, analytics, login, cloud services, networking, or in-app purchases.
+* Keep the MVP small, polished, child-safe, and suitable for ages 3–7.
+
+After implementation:
+
+1. Update relevant documentation if the milestone changes architecture, scene flow, gameplay behavior, child-safety assumptions, build setup, or testing steps.
+2. Summarize all changed files.
+3. Explain what was implemented.
+4. Mention any manual Unity Editor actions required.
+5. Provide verification steps.
+6. Mention any risks or incomplete items before moving to the next milestone.
