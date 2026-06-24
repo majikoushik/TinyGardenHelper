@@ -16,7 +16,7 @@ Tiny Garden Helper is a gentle, colorful, and offline-first educational Unity 2D
 - **Rewards:** Plant growth, sparkles, sticker/animal friend unlock.
 
 ## Current Project Status
-The repository has been initialized with the foundational architecture. The Boot, Main Menu, and Garden scene shells, along with their core UI scripts, have been created. The next step is to implement the local save system and progress tracking.
+The repository contains the foundational UI architecture, the scene flow generator, and the core persistent managers (`GameManager`, `SceneLoader`, `AudioManager`, `UIManager`, `RewardSystem`). The next step is to implement the local save system and link it to game progression.
 
 ## Opening the Project
 1. Open **Unity Hub**.

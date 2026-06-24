@@ -7,7 +7,7 @@ namespace TinyGarden.Garden
     {
         public void OnHomeClicked()
         {
-            SimpleSceneLoader.LoadScene(SceneNames.MainMenu);
+            SceneLoader.Instance.LoadScene(SceneNames.MainMenu);
         }
     }
 }

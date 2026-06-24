@@ -3,17 +3,14 @@ using UnityEngine.UI;
 
 namespace TinyGarden.UI
 {
-    public class ParentalGatePlaceholder : MonoBehaviour
+    public class ParentalGate : MonoBehaviour
     {
         [SerializeField] private GameObject gatePanel;
         [SerializeField] private Text questionText;
 
         private void Start()
         {
-            if (gatePanel != null)
-            {
-                gatePanel.SetActive(false);
-            }
+            Hide();
         }
 
         public void Show()

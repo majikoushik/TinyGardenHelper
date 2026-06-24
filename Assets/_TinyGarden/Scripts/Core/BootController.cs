@@ -17,7 +17,7 @@ namespace TinyGarden.Core
         private IEnumerator BootRoutine()
         {
             yield return new WaitForSeconds(bootDelaySeconds);
-            SimpleSceneLoader.LoadScene(SceneNames.MainMenu);
+            SceneLoader.Instance.LoadScene(SceneNames.MainMenu);
         }
     }
 }

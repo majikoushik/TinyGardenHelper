@@ -5,11 +5,11 @@ namespace TinyGarden.UI
 {
     public class MainMenuController : MonoBehaviour
     {
-        [SerializeField] private ParentalGatePlaceholder parentalGate;
+        [SerializeField] private ParentalGate parentalGate;
 
         public void OnPlayClicked()
         {
-            SimpleSceneLoader.LoadScene(SceneNames.Garden);
+            SceneLoader.Instance.LoadScene(SceneNames.Garden);
         }
 
         public void OnSettingsClicked()

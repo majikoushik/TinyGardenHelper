@@ -55,6 +55,15 @@ namespace TinyGarden.Editor
             // Title
             CreateText(canvas, "SplashText", "Tiny Garden\nLoading...", 72, Color.black, new Vector2(0, 0), new Vector2(0.5f, 0.5f));
 
+            // Core Managers
+            GameObject persistentManagers = new GameObject("PersistentManagers");
+            persistentManagers.AddComponent<GameManager>();
+            persistentManagers.AddComponent<SceneLoader>();
+            persistentManagers.AddComponent<TinyGarden.Audio.AudioManager>();
+            persistentManagers.AddComponent<UIManager>();
+            persistentManagers.AddComponent<TinyGarden.Rewards.RewardSystem>();
+            persistentManagers.AddComponent<TinyGarden.Platform.SafeAreaService>();
+
             // Boot Controller
             GameObject bootManager = new GameObject("BootManager");
             bootManager.AddComponent<BootController>();
@@ -100,13 +109,13 @@ namespace TinyGarden.Editor
             // Managers
             GameObject uiManager = new GameObject("MainMenuManager");
             var menuController = uiManager.AddComponent<MainMenuController>();
-            var gateController = uiManager.AddComponent<ParentalGatePlaceholder>();
+            var gateController = uiManager.AddComponent<ParentalGate>();
 
             // Wire up Parental Gate
-            var gateField = typeof(ParentalGatePlaceholder).GetField("gatePanel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            var gateField = typeof(ParentalGate).GetField("gatePanel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             if (gateField != null) gateField.SetValue(gateController, gatePanel);
             
-            var qTextField = typeof(ParentalGatePlaceholder).GetField("questionText", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            var qTextField = typeof(ParentalGate).GetField("questionText", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             if (qTextField != null) qTextField.SetValue(gateController, qText);
 
             var menuGateField = typeof(MainMenuController).GetField("parentalGate", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);

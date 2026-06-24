@@ -25,6 +25,7 @@ This plan outlines the testing strategy for Tiny Garden Helper to ensure a child
 - **Reward Sequence**: Verify that growing all three plants unlocks the animal friend and sticker.
 
 ## Audio Testing
+- Verify that tapping UI elements plays a soft feedback sound (`ChildFriendlyButton` hooks).
 - Verify all settings toggles (Music, SFX, Voice) work independently.
 - Ensure audio state persists across app restarts.
 - Verify audio pauses and resumes correctly when the app is backgrounded.
