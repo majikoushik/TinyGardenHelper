@@ -38,7 +38,12 @@ This plan outlines the testing strategy for Tiny Garden Helper to ensure a child
   - Drag the shape to the correct home. Verify it snaps into place and plays a correct sound.
   - Verify completing all 3 matches opens the Celebration Panel and successfully saves progress to disk.
 - **Incorrect Attempts**: Deliberately make wrong choices to verify that the "Try again" feedback is gentle, non-punitive, and allows infinite retries without blocking progress.
-- **Reward Sequence**: Verify that growing all three plants unlocks the animal friend and sticker.
+- **Reward Sequence**: 
+  - Verify that completing 1 or 2 activities does *not* unlock the animal.
+  - Complete the 3rd activity and return to the Garden. Verify the "A new garden friend!" celebration sequence plays and grants the animal.
+  - Tap the animal in the garden and verify it bounces.
+  - Open the Sticker Book and verify the "Star" sticker is unlocked.
+  - Restart Play Mode (or the game). Return to the Garden. Verify the animal and sticker are still present, but the Celebration Sequence does *not* play again (idempotent reward handling).
 
 ## Audio Testing
 - Verify that tapping UI elements plays a soft feedback sound (`ChildFriendlyButton` hooks).

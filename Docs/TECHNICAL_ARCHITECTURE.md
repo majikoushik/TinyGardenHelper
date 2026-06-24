@@ -165,8 +165,11 @@ Purpose:
 
 ### Rewards
 
-- `RewardSystem`: Unlocks stickers, plant growth, and animal friend.
-- `RewardDefinition`: ScriptableObject describing reward visuals/audio.
+- `RewardSystem`: Global manager that interfaces with `LocalJsonSaveSystem` to grant and persist string-based reward IDs.
+- `GardenProgressPresenter`: Evaluates the completion state of all mini-games upon returning to the Garden, triggering the Celebration sequence if all three are complete.
+- `RewardCelebrationController`: Manages the full-screen visual sequence (fade in, sparkles, chime, delay) when unlocking the animal.
+- `AnimalFriendController`: Attached to the animal in the garden; manages visibility and a touch-responsive bounce animation.
+- `StickerBookController`: Manages the Sticker Book UI panel, checking `RewardSystem` to display locked silhouettes or full-color stickers.
 - `CelebrationView`: Sparkles, sticker reveal, and success presentation.
 
 ### UI

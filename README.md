@@ -16,11 +16,10 @@ Tiny Garden Helper is a gentle, colorful, and offline-first educational Unity 2D
 - **Rewards:** Plant growth, sparkles, sticker/animal friend unlock.
 
 ## Current Project Status
-The repository contains the foundational UI architecture, core persistent managers, a privacy-compliant local Save System, and all three fully playable MVP Mini-Games: **Color Match**, **Counting Fruits**, and **Shape Sort**. The game features a resilient drag-and-drop framework tailored for children.
-- In **Color Match**, objects snap softly.
-- In **Counting Fruits**, objects can be dragged freely in and out of the basket to support self-correction without failure states.
-- In **Shape Sort**, an intelligent Progressive Hint system gently pulses the correct answer if a child makes consecutive incorrect attempts.
-Completing games successfully updates the garden visual state and saves progress to disk. The MVP mini-games are now completely built!
+The repository contains the foundational UI architecture, core persistent managers, a privacy-compliant local Save System, and all three fully playable MVP Mini-Games: **Color Match**, **Counting Fruits**, and **Shape Sort**. 
+The game features a resilient drag-and-drop framework tailored for children.
+Completing all three activities unlocks the final MVP reward flow: **Benny Bunny** the animal friend, and the **Garden Helper Star** sticker in the Sticker Book!
+The MVP is now feature-complete!
 
 ## Opening the Project
 1. Open **Unity Hub**.

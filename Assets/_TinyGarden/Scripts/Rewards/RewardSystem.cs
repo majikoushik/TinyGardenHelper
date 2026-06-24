@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
+using TinyGarden.Core;
 
 namespace TinyGarden.Rewards
 {
     public class RewardSystem : MonoBehaviour
     {
         public static RewardSystem Instance { get; private set; }
-
-        private List<string> unlockedRewardIds = new List<string>();
 
         private void Awake()
         {
@@ -22,22 +21,42 @@ namespace TinyGarden.Rewards
             }
         }
 
+        public void GrantReward(string rewardId)
+        {
+            if (string.IsNullOrEmpty(rewardId)) return;
+            if (GameManager.Instance == null || GameManager.Instance.SaveSystem == null) return;
+
+            var saveData = GameManager.Instance.SaveSystem.CurrentData;
+            if (saveData == null) return;
+
+            if (!saveData.UnlockedRewardIds.Contains(rewardId))
+            {
+                saveData.UnlockedRewardIds.Add(rewardId);
+                
+                // Keep backward compatibility for AnimalFriendUnlocked flag
+                if (rewardId == "animal_benny_bunny")
+                {
+                    saveData.AnimalFriendUnlocked = true;
+                }
+
+                GameManager.Instance.SaveSystem.Save(saveData);
+                Debug.Log($"[RewardSystem] Granted and Saved Reward: {rewardId}");
+            }
+        }
+
         public void GrantReward(RewardDefinition reward)
         {
             if (reward == null) return;
-
-            if (!unlockedRewardIds.Contains(reward.rewardId))
-            {
-                unlockedRewardIds.Add(reward.rewardId);
-                Debug.Log($"[RewardSystem] Granted Reward: {reward.rewardId} ({reward.rewardType})");
-                
-                // Future: Trigger UI celebrations, update save data
-            }
+            GrantReward(reward.rewardId);
         }
 
         public bool HasReward(string rewardId)
         {
-            return unlockedRewardIds.Contains(rewardId);
+            if (GameManager.Instance == null || GameManager.Instance.SaveSystem == null) return false;
+            var saveData = GameManager.Instance.SaveSystem.CurrentData;
+            if (saveData == null) return false;
+
+            return saveData.UnlockedRewardIds.Contains(rewardId);
         }
     }
 }

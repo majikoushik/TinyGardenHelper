@@ -62,8 +62,8 @@ namespace TinyGarden.Garden
             UpdateVisualState(true);
             StartCoroutine(PulseRoutine());
             
-            // Notify controller to check for Animal Unlock
-            FindObjectOfType<GardenSceneController>()?.CheckProgressState();
+            // Notify presenter to check for Animal Unlock
+            FindObjectOfType<GardenProgressPresenter>()?.EvaluateGardenState();
         }
 
         private System.Collections.IEnumerator PulseRoutine()

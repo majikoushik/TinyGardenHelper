@@ -85,8 +85,6 @@ namespace TinyGarden.SaveSystem
             activity.Completed = true;
             activity.SuccessfulCompletions++;
             Save(CurrentData);
-            
-            CheckAnimalUnlock();
         }
 
         public void UnlockReward(string rewardId)
@@ -107,20 +105,6 @@ namespace TinyGarden.SaveSystem
             Save(CurrentData);
         }
 
-        private void CheckAnimalUnlock()
-        {
-            if (CurrentData.AnimalFriendUnlocked) return;
 
-            bool colorMatchDone = CurrentData.Activities.Exists(a => a.ActivityId == ActivityId.ColorMatch && a.Completed);
-            bool countingDone = CurrentData.Activities.Exists(a => a.ActivityId == ActivityId.CountingFruits && a.Completed);
-            bool shapeSortDone = CurrentData.Activities.Exists(a => a.ActivityId == ActivityId.ShapeSort && a.Completed);
-
-            if (colorMatchDone && countingDone && shapeSortDone)
-            {
-                CurrentData.AnimalFriendUnlocked = true;
-                Save(CurrentData);
-                Debug.Log("[SaveSystem] All activities completed! Animal Friend unlocked!");
-            }
-        }
     }
 }

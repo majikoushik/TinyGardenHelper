@@ -177,16 +177,72 @@ namespace TinyGarden.Editor
             Button homeBtn = CreateButton(safeArea, "HomeButton", "Home", new Vector2(-400, 800), new Vector2(0.5f, 0f), new Vector2(150, 100));
             
             // Reset Progress Button (Dev)
-            Button resetBtn = CreateButton(safeArea, "ResetButton", "[QA] Reset Progress", new Vector2(400, 800), new Vector2(0.5f, 0f), new Vector2(250, 100));
             
-            GameObject uiManager = new GameObject("GardenManager");
-            var gardenController = uiManager.AddComponent<GardenSceneController>();
+            GameObject controllerObj = new GameObject("GardenManager");
+            var controller = controllerObj.AddComponent<GardenSceneController>();
             
-            var textObjField = typeof(GardenSceneController).GetField("animalStatusText", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (textObjField != null) textObjField.SetValue(gardenController, animalTxt);
+            var backBtn = CreateButton(safeArea, "BackButton", "Back to Menu", new Vector2(-250, 600), new Vector2(0.5f, 0.5f), new Vector2(200, 100));
+            UnityEditor.Events.UnityEventTools.AddPersistentListener(backBtn.onClick, controller.OnHomeClicked);
 
-            UnityEditor.Events.UnityEventTools.AddPersistentListener(homeBtn.onClick, gardenController.OnHomeClicked);
-            UnityEditor.Events.UnityEventTools.AddPersistentListener(resetBtn.onClick, gardenController.OnResetProgressClicked);
+            var resetBtn = CreateButton(safeArea, "ResetButton", "Reset Progress", new Vector2(250, 600), new Vector2(0.5f, 0.5f), new Vector2(200, 100));
+            UnityEditor.Events.UnityEventTools.AddPersistentListener(resetBtn.onClick, controller.OnResetProgressClicked);
+
+            // Create Benny Bunny (Animal Friend)
+            GameObject bennyBunny = CreatePanel(safeArea, "BennyBunny", new Color(0.9f, 0.8f, 0.9f), new Vector2(200, 0), new Vector2(0.5f, 0.5f), new Vector2(120, 160));
+            CreateText(bennyBunny, "Label", "Benny", 30, Color.black, Vector2.zero, new Vector2(0.5f, 0.5f));
+            var animalController = bennyBunny.AddComponent<TinyGarden.Rewards.AnimalFriendController>();
+            var animalFields = typeof(TinyGarden.Rewards.AnimalFriendController).GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            foreach(var f in animalFields)
+            {
+                if (f.Name == "animalVisuals") f.SetValue(animalController, bennyBunny); // Simplification: self is visuals
+            }
+
+            // Create Sticker Book
+            GameObject stickerBookBtnObj = CreateButton(safeArea, "StickerBookButton", "Sticker Book", new Vector2(-250, -400), new Vector2(0.5f, 0.5f), new Vector2(200, 100)).gameObject;
+            
+            GameObject stickerBookPanel = CreatePanel(safeArea, "StickerBookPanel", new Color(0.95f, 0.95f, 0.95f, 0.95f));
+            CreateText(stickerBookPanel, "Title", "My Sticker Book", 60, Color.black, new Vector2(0, 300), new Vector2(0.5f, 0.5f));
+            var closeBookBtn = CreateButton(stickerBookPanel, "CloseBookButton", "Close", new Vector2(0, -300), new Vector2(0.5f, 0.5f), new Vector2(200, 100));
+            
+            GameObject starSticker = CreatePanel(stickerBookPanel, "StarSticker", Color.yellow, Vector2.zero, new Vector2(0.5f, 0.5f), new Vector2(150, 150));
+            CreateText(starSticker, "Label", "Star", 40, Color.black, Vector2.zero, new Vector2(0.5f, 0.5f));
+            var starImage = starSticker.GetComponent<UnityEngine.UI.Image>();
+
+            var stickerController = controllerObj.AddComponent<TinyGarden.Rewards.StickerBookController>();
+            var stickerFields = typeof(TinyGarden.Rewards.StickerBookController).GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            foreach(var f in stickerFields)
+            {
+                if (f.Name == "stickerBookPanel") f.SetValue(stickerController, stickerBookPanel);
+                if (f.Name == "starStickerImage") f.SetValue(stickerController, starImage);
+            }
+            
+            UnityEditor.Events.UnityEventTools.AddPersistentListener(stickerBookBtnObj.GetComponent<UnityEngine.UI.Button>().onClick, stickerController.OpenStickerBook);
+            UnityEditor.Events.UnityEventTools.AddPersistentListener(closeBookBtn.onClick, stickerController.CloseStickerBook);
+            stickerBookPanel.SetActive(false);
+
+            // Celebration Panel
+            GameObject celebrationPanel = CreatePanel(safeArea, "CelebrationPanel", new Color(1f, 1f, 1f, 0.9f));
+            var celebText = CreateText(celebrationPanel, "CelebrationText", "A new garden friend!", 70, new Color(0.8f, 0.4f, 0.8f), Vector2.zero, new Vector2(0.5f, 0.5f));
+            var celebCanvasGroup = celebrationPanel.AddComponent<CanvasGroup>();
+            
+            var celebController = controllerObj.AddComponent<TinyGarden.Rewards.RewardCelebrationController>();
+            var celebFields = typeof(TinyGarden.Rewards.RewardCelebrationController).GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            foreach(var f in celebFields)
+            {
+                if (f.Name == "celebrationPanel") f.SetValue(celebController, celebrationPanel);
+                if (f.Name == "celebrationText") f.SetValue(celebController, celebText.GetComponent<UnityEngine.UI.Text>());
+                if (f.Name == "canvasGroup") f.SetValue(celebController, celebCanvasGroup);
+            }
+            celebrationPanel.SetActive(false);
+
+            // Progress Presenter
+            var presenter = controllerObj.AddComponent<TinyGarden.Garden.GardenProgressPresenter>();
+            var presenterFields = typeof(TinyGarden.Garden.GardenProgressPresenter).GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            foreach(var f in presenterFields)
+            {
+                if (f.Name == "celebrationController") f.SetValue(presenter, celebController);
+                if (f.Name == "animalFriend") f.SetValue(presenter, animalController);
+            }
 
             EditorSceneManager.SaveScene(scene, $"{SceneFolderPath}/{SceneNames.Garden}.unity");
         }
