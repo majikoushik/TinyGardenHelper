@@ -62,18 +62,44 @@ namespace TinyGarden.Tests.EditMode
         }
 
         [Test]
-        public void AnimalUnlocked_WhenAllThreeActivitiesCompleted()
+        public void AllThreeActivitiesCompleted_SavedCorrectly()
         {
+            // Verify that completing all 3 MVP activities records them as completed in the save data.
+            // Note: AnimalFriendUnlocked is NOT set here — that is the RewardSystem's responsibility.
+            // GardenProgressPresenter reads these completed flags and triggers RewardSystem.GrantReward().
             saveSystem.Load();
-            
+
             saveSystem.MarkActivityCompleted(ActivityId.ColorMatch);
-            Assert.IsFalse(saveSystem.CurrentData.AnimalFriendUnlocked);
-            
             saveSystem.MarkActivityCompleted(ActivityId.CountingFruits);
-            Assert.IsFalse(saveSystem.CurrentData.AnimalFriendUnlocked);
-            
             saveSystem.MarkActivityCompleted(ActivityId.ShapeSort);
-            Assert.IsTrue(saveSystem.CurrentData.AnimalFriendUnlocked);
+
+            bool colorDone = saveSystem.CurrentData.Activities.Exists(a => a.ActivityId == ActivityId.ColorMatch && a.Completed);
+            bool countingDone = saveSystem.CurrentData.Activities.Exists(a => a.ActivityId == ActivityId.CountingFruits && a.Completed);
+            bool shapeDone = saveSystem.CurrentData.Activities.Exists(a => a.ActivityId == ActivityId.ShapeSort && a.Completed);
+
+            Assert.IsTrue(colorDone, "ColorMatch should be marked completed.");
+            Assert.IsTrue(countingDone, "CountingFruits should be marked completed.");
+            Assert.IsTrue(shapeDone, "ShapeSort should be marked completed.");
+
+            // AnimalFriendUnlocked is ONLY set by RewardSystem.GrantReward("animal_benny_bunny").
+            // This save-system test deliberately does NOT set it, to keep responsibilities clear.
+            Assert.IsFalse(saveSystem.CurrentData.AnimalFriendUnlocked, "SaveSystem alone must not auto-unlock the animal.");
+        }
+
+        [Test]
+        public void AnimalFriendUnlocked_PersistsAfterSaveAndLoad()
+        {
+            // When RewardSystem sets AnimalFriendUnlocked=true and saves, it persists on reload.
+            var data = saveSystem.Load();
+            data.AnimalFriendUnlocked = true;
+            data.UnlockedRewardIds.Add("animal_benny_bunny");
+            saveSystem.Save(data);
+
+            var freshSystem = new LocalJsonSaveSystem(testDirectory);
+            var freshData = freshSystem.Load();
+
+            Assert.IsTrue(freshData.AnimalFriendUnlocked, "Animal unlock must persist after save/load.");
+            Assert.IsTrue(freshData.UnlockedRewardIds.Contains("animal_benny_bunny"), "Reward ID must persist after save/load.");
         }
 
         [Test]

@@ -1,5 +1,6 @@
 using UnityEngine;
 using TinyGarden.Core;
+using TinyGarden.MiniGames.Shared; // ActivityId is defined here
 
 namespace TinyGarden.MiniGames.CountingFruits
 {

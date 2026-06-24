@@ -26,8 +26,10 @@ namespace TinyGarden.Garden
         {
             if (isCompleted)
             {
-                Debug.Log($"[Garden] {activityId} is already completed. Plant is happy!");
-                StartCoroutine(PulseRoutine());
+                // Allow replay — the child may want to play again.
+                // Rewards are idempotent: RewardSystem.GrantReward guards against duplicates.
+                Debug.Log($"[Garden] {activityId} already done — replaying for fun!");
+                StartCoroutine(DelayedLoadRoutine());
                 return;
             }
 
@@ -52,6 +54,7 @@ namespace TinyGarden.Garden
 
             Debug.Log($"[Garden] Simulating {activityId} activity completion for MVP testing.");
             
+#if UNITY_EDITOR
             // SIMULATING MVP COMPLETION FOR OTHERS:
             if (GameManager.Instance != null && GameManager.Instance.SaveSystem != null)
             {
@@ -64,14 +67,30 @@ namespace TinyGarden.Garden
             
             // Notify presenter to check for Animal Unlock
             FindObjectOfType<GardenProgressPresenter>()?.EvaluateGardenState();
+#endif
         }
 
         private System.Collections.IEnumerator PulseRoutine()
         {
             Vector3 originalScale = transform.localScale;
             transform.localScale = originalScale * 1.2f;
-            yield return new WaitForSeconds(0.15f);
+            yield return new UnityEngine.WaitForSeconds(0.15f);
             transform.localScale = originalScale;
+        }
+
+        /// <summary>
+        /// Brief pulse feedback, then re-loads the mini-game so the child can replay.
+        /// Rewards in RewardSystem.GrantReward() are idempotent — replaying cannot double-grant.
+        /// </summary>
+        private System.Collections.IEnumerator DelayedLoadRoutine()
+        {
+            yield return StartCoroutine(PulseRoutine());
+            if (activityId == ActivityId.ColorMatch)
+                SceneLoader.Instance.LoadScene(SceneNames.ColorMatch);
+            else if (activityId == ActivityId.CountingFruits)
+                SceneLoader.Instance.LoadScene(SceneNames.CountingFruits);
+            else if (activityId == ActivityId.ShapeSort)
+                SceneLoader.Instance.LoadScene(SceneNames.ShapeSort);
         }
     }
 }

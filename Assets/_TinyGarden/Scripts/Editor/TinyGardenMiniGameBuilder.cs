@@ -49,7 +49,7 @@ namespace TinyGarden.Editor
             safeAreaRect.anchorMin = Vector2.zero;
             safeAreaRect.anchorMax = Vector2.one;
             safeAreaRect.sizeDelta = Vector2.zero;
-            safeArea.AddComponent<TinyGarden.Platform.SafeAreaFitter>();
+            safeArea.AddComponent<TinyGarden.UI.SafeAreaFitter>();
 
             CreateText(safeArea, "TitleText", "Match the Colors!", 60, Color.black, new Vector2(0, 400), new Vector2(0.5f, 0.5f));
 
@@ -107,7 +107,7 @@ namespace TinyGarden.Editor
             safeAreaRect.anchorMin = Vector2.zero;
             safeAreaRect.anchorMax = Vector2.one;
             safeAreaRect.sizeDelta = Vector2.zero;
-            safeArea.AddComponent<TinyGarden.Platform.SafeAreaFitter>();
+            safeArea.AddComponent<TinyGarden.UI.SafeAreaFitter>();
 
             CreateText(safeArea, "TitleText", "Put apples in the basket!", 50, Color.black, new Vector2(0, 700), new Vector2(0.5f, 0.5f));
 
@@ -133,9 +133,11 @@ namespace TinyGarden.Editor
             hzLayout.childControlWidth = false;
             hzLayout.childControlHeight = false;
 
-            GameObject dotPrefab = CreatePanel(null, "DotPrefab", Color.gray, Vector2.zero, Vector2.zero, new Vector2(50, 50));
-            // Will be used by script, hide it
-            dotPrefab.SetActive(false);
+            // Dot prefab: create under a hidden GO so transform.SetParent doesn't throw on null
+            GameObject dotPrefabHolder = new GameObject("DotPrefabHolder");
+            dotPrefabHolder.transform.SetParent(safeArea.transform, false);
+            dotPrefabHolder.SetActive(false);
+            GameObject dotPrefab = CreatePanel(dotPrefabHolder, "DotPrefab", Color.gray, Vector2.zero, new Vector2(0.5f, 0.5f), new Vector2(50, 50));
 
             var viScript = visualIndicator.AddComponent<TinyGarden.MiniGames.CountingFruits.CountVisualIndicator>();
             var viFields = typeof(TinyGarden.MiniGames.CountingFruits.CountVisualIndicator).GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
@@ -219,7 +221,7 @@ namespace TinyGarden.Editor
             safeAreaRect.anchorMin = Vector2.zero;
             safeAreaRect.anchorMax = Vector2.one;
             safeAreaRect.sizeDelta = Vector2.zero;
-            safeArea.AddComponent<TinyGarden.Platform.SafeAreaFitter>();
+            safeArea.AddComponent<TinyGarden.UI.SafeAreaFitter>();
 
             CreateText(safeArea, "TitleText", "Find each shape's home!", 50, Color.black, new Vector2(0, 700), new Vector2(0.5f, 0.5f));
 
@@ -270,14 +272,23 @@ namespace TinyGarden.Editor
             var data = new TinyGarden.MiniGames.ShapeSort.ShapeItemData { shapeType = (TinyGarden.MiniGames.ShapeSort.ShapeType)System.Enum.Parse(typeof(TinyGarden.MiniGames.ShapeSort.ShapeType), matchId) };
             target.Setup(data);
             
+            // Add visual shape icon
+            string shapeText = matchId == "Circle" ? "●" : (matchId == "Square" ? "■" : "▲");
+            CreateText(go, "ShapeIcon", shapeText, 150, new Color(col.r, col.g, col.b, 0.5f), Vector2.zero, new Vector2(0.5f, 0.5f));
+
             return go;
         }
 
         private static GameObject CreateShapeDraggable(GameObject parent, string name, string matchId, Color col, Vector2 pos, TinyGarden.MiniGames.ShapeSort.ShapeType type)
         {
-            GameObject go = CreatePanel(parent, name, col, pos, new Vector2(0.5f, 0.5f), new Vector2(150, 150));
+            GameObject go = CreatePanel(parent, name, new Color(1f, 1f, 1f, 0f), pos, new Vector2(0.5f, 0.5f), new Vector2(150, 150)); // Transparent bg for drag hit box
             go.AddComponent<CanvasGroup>();
             var draggable = go.AddComponent<TinyGarden.MiniGames.ShapeSort.ShapeDraggableItem>();
+
+            // Add visual shape icon
+            string shapeText = matchId == "Circle" ? "●" : (matchId == "Square" ? "■" : "▲");
+            CreateText(go, "ShapeIcon", shapeText, 150, col, Vector2.zero, new Vector2(0.5f, 0.5f));
+
             return go;
         }
 

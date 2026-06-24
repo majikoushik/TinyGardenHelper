@@ -112,11 +112,11 @@ namespace TinyGarden.Editor
             settingsPanel.SetActive(false);
             CreateText(settingsPanel, "Title", "Settings", 60, Color.black, new Vector2(0, 500), new Vector2(0.5f, 0.5f));
             
-            // Toggles (represented as Buttons for MVP simplicity)
-            Button musicBtn = CreateButton(settingsPanel, "MusicToggle", "Music: ON", new Vector2(0, 300), new Vector2(0.5f, 0.5f), new Vector2(400, 100));
-            Button sfxBtn = CreateButton(settingsPanel, "SFXToggle", "SFX: ON", new Vector2(0, 150), new Vector2(0.5f, 0.5f), new Vector2(400, 100));
-            Button voiceBtn = CreateButton(settingsPanel, "VoiceToggle", "Voice: ON", new Vector2(0, 0), new Vector2(0.5f, 0.5f), new Vector2(400, 100));
-            Button sensoryBtn = CreateButton(settingsPanel, "SensoryToggle", "Sensory Safe: OFF", new Vector2(0, -150), new Vector2(0.5f, 0.5f), new Vector2(400, 100));
+            // Real Toggles
+            Toggle musicToggle = CreateToggle(settingsPanel, "MusicToggle", "Music", new Vector2(0, 300), new Vector2(0.5f, 0.5f), new Vector2(400, 100));
+            Toggle sfxToggle = CreateToggle(settingsPanel, "SFXToggle", "SFX", new Vector2(0, 150), new Vector2(0.5f, 0.5f), new Vector2(400, 100));
+            Toggle voiceToggle = CreateToggle(settingsPanel, "VoiceToggle", "Voice", new Vector2(0, 0), new Vector2(0.5f, 0.5f), new Vector2(400, 100));
+            Toggle sensoryToggle = CreateToggle(settingsPanel, "SensoryToggle", "Sensory Safe Mode", new Vector2(0, -150), new Vector2(0.5f, 0.5f), new Vector2(400, 100));
             
             Button resetBtn = CreateButton(settingsPanel, "ResetButton", "Reset Progress", new Vector2(0, -350), new Vector2(0.5f, 0.5f), new Vector2(400, 100));
             resetBtn.GetComponent<Image>().color = new Color(0.9f, 0.4f, 0.4f);
@@ -144,6 +144,24 @@ namespace TinyGarden.Editor
 
             var settingsPanelField = typeof(TinyGarden.UI.SettingsController).GetField("settingsPanel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             if (settingsPanelField != null) settingsPanelField.SetValue(settingsController, settingsPanel);
+
+            // Wire up Toggles
+            var mToggleField = typeof(TinyGarden.UI.SettingsController).GetField("musicToggle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (mToggleField != null) mToggleField.SetValue(settingsController, musicToggle);
+
+            var sToggleField = typeof(TinyGarden.UI.SettingsController).GetField("sfxToggle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (sToggleField != null) sToggleField.SetValue(settingsController, sfxToggle);
+
+            var vToggleField = typeof(TinyGarden.UI.SettingsController).GetField("voiceToggle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (vToggleField != null) vToggleField.SetValue(settingsController, voiceToggle);
+
+            var ssToggleField = typeof(TinyGarden.UI.SettingsController).GetField("sensorySafeToggle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (ssToggleField != null) ssToggleField.SetValue(settingsController, sensoryToggle);
+
+            UnityEditor.Events.UnityEventTools.AddPersistentListener(musicToggle.onValueChanged, settingsController.OnMusicToggled);
+            UnityEditor.Events.UnityEventTools.AddPersistentListener(sfxToggle.onValueChanged, settingsController.OnSfxToggled);
+            UnityEditor.Events.UnityEventTools.AddPersistentListener(voiceToggle.onValueChanged, settingsController.OnVoiceToggled);
+            UnityEditor.Events.UnityEventTools.AddPersistentListener(sensoryToggle.onValueChanged, settingsController.OnSensorySafeToggled);
 
             // Wire UnityEvents
             UnityEditor.Events.UnityEventTools.AddPersistentListener(playBtn.onClick, menuController.OnPlayClicked);
@@ -385,6 +403,35 @@ namespace TinyGarden.Editor
             CreateText(btnGO, "Text", label, 40, Color.black, Vector2.zero, new Vector2(0.5f, 0.5f));
 
             return btn;
+        }
+
+        private static Toggle CreateToggle(GameObject parent, string name, string label, Vector2 pos, Vector2 anchor, Vector2 size)
+        {
+            GameObject toggleGO = new GameObject(name);
+            toggleGO.transform.SetParent(parent.transform, false);
+            RectTransform rect = toggleGO.AddComponent<RectTransform>();
+            rect.anchorMin = anchor;
+            rect.anchorMax = anchor;
+            rect.anchoredPosition = pos;
+            rect.sizeDelta = size;
+
+            Toggle toggle = toggleGO.AddComponent<Toggle>();
+
+            // Background checkbox
+            GameObject bgGO = CreatePanel(toggleGO, "Background", Color.white, new Vector2(-size.x / 2f + 50f, 0), new Vector2(0.5f, 0.5f), new Vector2(50, 50));
+            
+            // Checkmark
+            GameObject checkmarkGO = CreatePanel(bgGO, "Checkmark", new Color(0.2f, 0.8f, 0.2f), Vector2.zero, new Vector2(0.5f, 0.5f), new Vector2(30, 30));
+            
+            toggle.targetGraphic = bgGO.GetComponent<Image>();
+            toggle.graphic = checkmarkGO.GetComponent<Image>();
+            
+            // Label text
+            Text labelText = CreateText(toggleGO, "Label", label, 40, Color.black, new Vector2(50, 0), new Vector2(0.5f, 0.5f));
+            labelText.alignment = TextAnchor.MiddleLeft;
+
+            toggle.isOn = true;
+            return toggle;
         }
 
         private static void UpdateBuildSettings()

@@ -1,10 +1,13 @@
 # Release Notes: v0.1.0 (MVP)
 
 **Tiny Garden Helper**  
-*Release Candidate 1*
+*Pre-Release — Development Build*
+
+> [!WARNING]
+> **Not Release Candidate yet.** Unity scenes must be generated via `Tiny Garden > Build Core Scenes` and `Tiny Garden > Build Mini-Games`. Commercial art, audio, and device QA must be completed before store submission.
 
 ## Overview
-This is the foundational MVP release of Tiny Garden Helper, establishing the core game loop, save architecture, and child-safe guardrails. The app provides a calm, offline, ad-free environment for preschoolers to practice basic early-learning concepts.
+This is the foundational MVP codebase for Tiny Garden Helper, establishing the core game loop, save architecture, and child-safe guardrails. The app provides a calm, offline, ad-free environment for preschoolers to practice basic early-learning concepts.
 
 ## MVP Features
 - **The Garden Hub**: A central hub where the child's progress is visually represented. 

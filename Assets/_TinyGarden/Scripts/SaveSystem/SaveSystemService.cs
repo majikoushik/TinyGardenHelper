@@ -16,6 +16,15 @@ namespace TinyGarden.SaveSystem
             Debug.Log("[SaveSystemService] Initialized. Data loaded.");
         }
 
+        /// <summary>
+        /// Saves the provided GameSaveData to disk immediately.
+        /// Use this when callers (RewardSystem, SettingsController) have already mutated CurrentData.
+        /// </summary>
+        public void Save(GameSaveData data)
+        {
+            saveSystemImpl?.Save(data);
+        }
+
         public void SaveData()
         {
             if (saveSystemImpl != null && CurrentData != null)
