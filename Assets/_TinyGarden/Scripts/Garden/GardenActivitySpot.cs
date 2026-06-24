@@ -31,10 +31,16 @@ namespace TinyGarden.Garden
                 return;
             }
 
+            if (activityId == ActivityId.ColorMatch)
+            {
+                Debug.Log("[Garden] Loading Color Match mini-game...");
+                SceneLoader.Instance.LoadScene(SceneNames.ColorMatch);
+                return;
+            }
+
             Debug.Log($"[Garden] Simulating {activityId} activity completion for MVP testing.");
             
-            // SIMULATING MVP COMPLETION:
-            // TODO (Prompt 05): Replace this simulated completion with actual Color Match gameplay transition.
+            // SIMULATING MVP COMPLETION FOR OTHERS:
             if (GameManager.Instance != null && GameManager.Instance.SaveSystem != null)
             {
                 GameManager.Instance.SaveSystem.MarkActivityCompleted(activityId);

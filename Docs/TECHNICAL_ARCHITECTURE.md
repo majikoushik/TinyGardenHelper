@@ -151,11 +151,11 @@ Purpose:
 - `ActivityDefinition`: ScriptableObject for shared activity metadata.
 - `ActivityResult`: Simple result object for completed activity.
 - `ColorMatchController`: Color matching activity logic.
-- `CountingController`: Counting fruits activity logic.
-- `ShapeSortingController`: Shape sorting activity logic.
-- `ChoiceButton`: Large reusable choice button component.
-- `DraggableShape`: Drag/drop shape behavior.
-- `DropSlot`: Matching slot for shape sorting.
+- `ColorDraggableItem`: Draggable object for color match (butterfly/water drop).
+- `ColorDropTarget`: Drop target for color match (flower/pot).
+- `DragItemBase`: Reusable base class for touch-friendly drag-and-drop.
+- `DropTargetBase`: Reusable base class for validating dropped items.
+- `ColorMatchDefinition` & `ColorMatchItemData`: Configuration models.
 
 ### Rewards
 

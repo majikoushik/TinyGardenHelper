@@ -298,13 +298,30 @@ namespace TinyGarden.Editor
 
         private static void UpdateBuildSettings()
         {
-            var scenes = new EditorBuildSettingsScene[]
+            var requiredScenes = new string[]
             {
-                new EditorBuildSettingsScene($"{SceneFolderPath}/{SceneNames.Boot}.unity", true),
-                new EditorBuildSettingsScene($"{SceneFolderPath}/{SceneNames.MainMenu}.unity", true),
-                new EditorBuildSettingsScene($"{SceneFolderPath}/{SceneNames.Garden}.unity", true)
+                $"{SceneFolderPath}/{SceneNames.Boot}.unity",
+                $"{SceneFolderPath}/{SceneNames.MainMenu}.unity",
+                $"{SceneFolderPath}/{SceneNames.Garden}.unity"
             };
-            EditorBuildSettings.scenes = scenes;
+
+            var originalScenes = EditorBuildSettings.scenes;
+            var newScenesList = new System.Collections.Generic.List<EditorBuildSettingsScene>();
+
+            foreach (var path in requiredScenes)
+            {
+                newScenesList.Add(new EditorBuildSettingsScene(path, true));
+            }
+
+            foreach (var s in originalScenes)
+            {
+                if (System.Array.IndexOf(requiredScenes, s.path) == -1)
+                {
+                    newScenesList.Add(new EditorBuildSettingsScene(s.path, s.enabled));
+                }
+            }
+
+            EditorBuildSettings.scenes = newScenesList.ToArray();
         }
     }
 }

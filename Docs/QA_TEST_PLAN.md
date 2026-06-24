@@ -20,7 +20,11 @@ This plan outlines the testing strategy for Tiny Garden Helper to ensure a child
 - **Multi-Touch Avoidance**: Ensure accidental multi-touch doesn't trigger unexpected behavior or crashes.
 
 ## Gameplay & Logic Testing
-- **Mini-Games**: Complete each mini-game successfully.
+- **Color Match Mini-Game**:
+  - Drag butterflies to matching flowers. Ensure `DragItemBase` handles touch/mouse inputs correctly.
+  - Verify dragging the wrong color returns the butterfly gently to its starting position and triggers a pulse hint on the drop target.
+  - Verify dragging the correct color snaps it to the target and plays a success sparkle sound.
+  - Verify completing all three matches opens the Celebration Panel and successfully saves progress.
 - **Incorrect Attempts**: Deliberately make wrong choices to verify that the "Try again" feedback is gentle, non-punitive, and allows infinite retries without blocking progress.
 - **Reward Sequence**: Verify that growing all three plants unlocks the animal friend and sticker.
 
